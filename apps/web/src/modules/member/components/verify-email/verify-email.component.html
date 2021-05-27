@@ -1,0 +1,24 @@
+<h3 mat-dialog-title>Verify email</h3>
+<div mat-dialog-content>
+  <div *ngIf="!success">
+    <p>A verification code has been sent to {{ data.email }}, please enter it below to verify your email address.</p>
+    <form [formGroup]="form">
+      <mat-form-field>
+        <input cdkFocusInitial formControlName="code" matInput placeholder="Code" required />
+        <mat-error [appFieldErrors]="form.controls.code"></mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+  <p *ngIf="success" class="success-message">You're email has been successfully verified, closing dialog...</p>
+  <mat-error *ngIf="!success && errorMessage">
+    {{ errorMessage }}
+  </mat-error>
+</div>
+<div mat-dialog-actions *ngIf="!success">
+  <app-async-button [processing]="processing">
+    <button mat-flat-button color="primary" (click)="onConfirm()">Verify email</button>
+  </app-async-button>
+  <button mat-stroked-button color="warn" (click)="closeDialog()">
+    {{ data.emailJustChanged ? "I'll do this later" : 'Cancel' }}
+  </button>
+</div>

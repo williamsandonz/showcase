@@ -1,0 +1,12 @@
+Type: AWS::RDS::DBInstance
+Properties:
+  AllocatedStorage: ${env:WEB_API_POSTGRES_ALLOCATED_STORAGE}
+  DBName: ${env:WEB_API_POSTGRES_DB}
+  DBInstanceClass: ${env:WEB_API_POSTGRES_INSTANCE_CLASS}
+  DBInstanceIdentifier: ${self:custom.name}
+  Engine: postgres
+  EngineVersion: 12.5
+  MasterUsername: ${env:WEB_API_POSTGRES_USER}
+  MasterUserPassword: ${env:WEB_API_POSTGRES_PASSWORD}
+  PubliclyAccessible: true
+  StorageType: gp2

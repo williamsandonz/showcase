@@ -1,0 +1,19 @@
+@import './../../../../styles/includes';
+
+:host {
+  padding: 40px 0 38px;
+  margin: 0 (-$gutter) 40px;
+  border-bottom: 1px solid $gray;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  &.has-tabs {
+    padding-bottom: 78px;
+  }
+  @include media-breakpoint-up(lg) {
+    padding-top: 60px;
+  }
+  h1 {
+    margin-bottom: 0;
+  }
+}

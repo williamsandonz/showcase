@@ -1,0 +1,47 @@
+version: "3.5"
+
+services:
+  db:
+    container_name: monorepo-sdk-api-db
+    environment:
+      POSTGRES_DB: "${SDK_API_POSTGRES_DB}"
+      POSTGRES_PASSWORD: "${SDK_API_POSTGRES_PASSWORD}"
+      POSTGRES_USER: "${SDK_API_POSTGRES_USER}"
+    hostname: postgres
+    image: "postgres:12.5"
+    ports:
+      - "$SDK_API_POSTGRES_PORT:5432"
+    restart: 'always'
+    volumes:
+      - monorepo-sdk-api-db:/var/lib/postgresql/data:cached
+  db-admin:
+    container_name: monorepo-sdk-api-db-admin
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "${GLOBAL_PGADMIN_DEFAULT_EMAIL}"
+      PGADMIN_DEFAULT_PASSWORD: "${GLOBAL_PGADMIN_DEFAULT_PASSWORD}"
+    image: "dpage/pgadmin4"
+    logging:
+      driver: "none"
+    ports:
+      - "5001:80"
+    volumes:
+      - monorepo-sdk-api-db-admin:/root/.pgadmin:cached
+  db-e2e:
+    container_name: monorepo-sdk-api-db-e2e
+    environment:
+      POSTGRES_DB: "${SDK_API_POSTGRES_DB}"
+      POSTGRES_PASSWORD: "${SDK_API_POSTGRES_PASSWORD}"
+      POSTGRES_USER: "${SDK_API_POSTGRES_USER}"
+    hostname: postgres
+    image: "postgres:12.2"
+    ports:
+      - "$SDK_API_POSTGRES_PORT_E2E:5432"
+    restart: 'always'
+    volumes:
+      - monorepo-sdk-api-db-e2e:/var/lib/postgresql/data:cached
+volumes:
+  monorepo-sdk-api-db:
+  monorepo-sdk-api-db-admin:
+  monorepo-sdk-api-db-e2e:

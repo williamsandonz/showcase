@@ -1,0 +1,24 @@
+DependsOn:
+  # Fixes https://forum.serverless.com/t/creation-of-user-pool-client-fails-saying-provider-google-does-not-exist/10050
+  - CognitoUserPoolIdentityProvider
+Type: AWS::Cognito::UserPoolClient
+Properties:
+  AllowedOAuthFlows:
+    - code
+  AllowedOAuthFlowsUserPoolClient: true
+  AllowedOAuthScopes: !Split [" ", "${env:GLOBAL_COGNITO_CLIENT_OAUTH_SCOPES}"]
+  CallbackURLs:
+    - "https://${self:custom.websiteUri.withWWW}${env:GLOBAL_COGNITO_OAUTH_CALLBACK_LOGIN}"
+    - !If ["IsDev", "https://localhost:4200${env:GLOBAL_COGNITO_OAUTH_CALLBACK_LOGIN}", !Ref "AWS::NoValue"]
+  ClientName: web
+  ExplicitAuthFlows:
+    - ADMIN_NO_SRP_AUTH
+    - USER_PASSWORD_AUTH
+  GenerateSecret: false
+  LogoutURLs:
+    - "https://${self:custom.websiteUri.withWWW}${env:GLOBAL_COGNITO_OAUTH_CALLBACK_LOGOUT}"
+    - !If ["IsDev", "https://localhost:4200${env:GLOBAL_COGNITO_OAUTH_CALLBACK_LOGOUT}", !Ref "AWS::NoValue"]
+  SupportedIdentityProviders:
+    - Google
+  UserPoolId:
+    Ref: CognitoUserPool

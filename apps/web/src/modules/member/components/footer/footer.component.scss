@@ -1,0 +1,9 @@
+@import './../../../../styles/includes';
+
+:host {
+  height: 90px;
+  padding: 10px $gutter 10px;
+  display: flex;
+  background: red;
+  color :black;
+}

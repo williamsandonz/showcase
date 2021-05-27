@@ -1,0 +1,29 @@
+{
+  "npmScope": "monorepo",
+  "affected": { "defaultBase": "master" },
+  "implicitDependencies": {
+    "angular.json": "*",
+    "package.json": { "dependencies": "*", "devDependencies": "*" },
+    "tsconfig.base.json": "*",
+    "tslint.json": "*",
+    "nx.json": "*",
+    ".eslintrc.json": "*"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
+    }
+  },
+  "projects": {
+    "web": { "tags": [] },
+    "web-e2e": { "tags": [], "implicitDependencies": ["web"] },
+    "web-api": { "tags": [] },
+    "web-api-client": { "tags": [] },
+    "sdk-api": { "tags": [] },
+    "sdk-api-client": { "tags": [] },
+    "api-client": { "tags": [] },
+    "api": { "tags": [] },
+    "common": { "tags": [] }
+  }
+}

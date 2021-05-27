@@ -1,0 +1,284 @@
+@import 'includes';
+@import '~@angular/material/theming';
+@include mat-core();
+/****************************************************************
+***************************** Theme  ****************************
+****************************************************************/
+$primary: mat-palette($primary-palette);
+$accent: mat-palette($accent-palette, A200, A100, A400);
+$warn: mat-palette($warn-palette);
+$theme: mat-light-theme($primary, $accent, $warn);
+@include angular-material-theme($theme);
+/****************************************************************
+************************** Typography  **************************
+****************************************************************/
+$typography: mat-typography-config(
+  $font-family: "'Open Sans', sans-serif",
+  $headline: mat-typography-level(37px, 50px, 600),
+  $title: mat-typography-level(23px, 30px, 600),
+  $subheading-2: mat-typography-level(19px, 24px, 600),
+  $subheading-1: mat-typography-level(16px, 21px, 600),
+  $body-1: mat-typography-level(15px, 22px, 400),
+);
+@include angular-material-typography($typography);
+.mat-typography .mat-h1,
+.mat-typography h1,
+.mat-typography .mat-h2,
+.mat-typography h2,
+.mat-typography .mat-h3,
+.mat-typography h3,
+.mat-typography .mat-h4,
+.mat-typography h4 {
+  font-family: 'Montserrat';
+}
+.mat-typography .mat-h1,
+.mat-typography h1 {
+  @include media-breakpoint-up(lg) {
+    font-size: 45px;
+    line-height: 60px;
+  }
+}
+.mat-typography .mat-h2,
+.mat-typography h2 {
+  @include media-breakpoint-up(lg) {
+    font-size: 28px;
+    line-height: 38px;
+  }
+}
+
+.mat-body-1,
+.mat-body-2 {
+  ul {
+    padding-left: 20px;
+    margin-bottom: 12px;
+  }
+  li {
+    list-style-type: disc;
+  }
+}
+a {
+  text-decoration: underline;
+  cursor: pointer;
+  color: $blue;
+}
+mat-icon {
+  color: $purple;
+}
+.mat-flat-button mat-icon {
+  color: white;
+}
+/****************************************************************
+**************************** Layout  ***************************
+****************************************************************/
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+}
+app-root > router-outlet + * {
+  flex: 1;
+}
+app-root-guest > router-outlet + *,
+app-root-member router-outlet + * {
+  padding: 0 $gutter;
+  flex: 1;
+}
+/****************************************************************
+**************************** General  ***************************
+****************************************************************/
+ul {
+  padding: 0;
+  margin: 0;
+  li {
+    list-style-type: none;
+  }
+}
+/****************************************************************
+**************************** Form  *****************************
+****************************************************************/
+mat-form-field.mat-form-field {
+  display: block;
+}
+mat-form-field,
+*[formGroupName] {
+  margin-top: 10px;
+}
+.vertical-checkboxes {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  mat-checkbox {
+    margin-top: 10px;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+mat-checkbox.text-wrap {
+  .mat-checkbox-layout {
+    white-space: normal;
+  }
+}
+.pseudo-mat-form-field {
+  margin-top: 10px;
+}
+/****************************************************************
+**************************** Card  ******************************
+****************************************************************/
+mat-card.form-card {
+  max-width: 400px;
+  padding: 20px;
+  margin: 40px auto;
+  border: 1px solid $gray;
+  border-radius: 4px;
+  @include media-breakpoint-up(sm) {
+    margin: 100px auto;
+  }
+  .mat-card-header-text {
+    margin-left: 0;
+    mat-card-title {
+      margin-bottom: 15px;
+    }
+  }
+}
+mat-card-actions.adjacent {
+  display: flex;
+  > * {
+    margin-left: 15px;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}
+/****************************************************************
+*************************** Column  *****************************
+****************************************************************/
+.principal-column {
+  margin: 0 auto;
+  @include media-breakpoint-up(sm) {
+    width: 62%;
+  }
+  @include media-breakpoint-up(lg) {
+    width: 50%;
+  }
+}
+/****************************************************************
+************************ Focal column  **************************
+****************************************************************/
+.focal-column {
+  padding: 0 0;
+  margin: 0 auto;
+  max-width: 700px;
+  &.condensed {
+    max-width: 500px;
+  }
+}
+/****************************************************************
+************************ Text section  **************************
+****************************************************************/
+.text-section {
+  color: $gray-dark;
+  h3 {
+    margin: 20px 0 10px;
+  }
+  mat-divider {
+    width: 40px;
+    height: 3px;
+    margin: 30px 0;
+    background: $blue;
+  }
+  &:last-child mat-divider {
+    display: none;
+  }
+}
+/****************************************************************
+************************* Mat-Spinner  **************************
+****************************************************************/
+.page-spinner {
+  margin: 90px auto 70px;
+}
+.mat-progress-spinner circle,
+.mat-spinner circle {
+  stroke: black;
+}
+/****************************************************************
+*********************** Success message  ************************
+****************************************************************/
+.success-message {
+  color: $green;
+}
+/****************************************************************
+************************* Stroked button  ***********************
+****************************************************************/
+.mat-stroked-button[color='warn'] {
+  border-color: rgba($red, 0.7);
+}
+/****************************************************************
+*********************** Responsive button  **********************
+****************************************************************/
+.mat-button.responsive-button {
+  padding: 0 10px;
+  font-size: 12px;
+  line-height: 29px;
+  @include media-breakpoint-up(lg) {
+    padding: 0 16px;
+    font-size: 14px;
+    line-height: 36px;
+  }
+}
+/****************************************************************
+******************************* Row  ****************************
+****************************************************************/
+.row {
+  padding: 0 $gutter;
+  margin: 0 (-$gutter);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+/****************************************************************
+*********************** Mat dialog actions  *********************
+****************************************************************/
+.mat-dialog-actions {
+  button:first-child {
+    margin-right: $gutter;
+  }
+}
+/****************************************************************
+************************ Heading Panel tabs  ********************
+****************************************************************/
+.heading-panel-tabs {
+  &.mat-tab-group {
+    margin-top: -88px;
+  }
+  .mat-tab-header {
+    margin: 0;
+    border-bottom: none;
+  }
+  .mat-tab-body-content {
+    overflow: visible;
+  }
+  .mat-tab-labels {
+    justify-content: center;
+  }
+  .mat-tab-body {
+    padding: 30px 0;
+  }
+}
+/****************************************************************
+********************** Buttons in conjunction *******************
+****************************************************************/
+.buttons-in-conjuction {
+  display: flex;
+  > app-async-button,
+  > button {
+    display: flex;
+    &:first-child::after {
+      margin: 6px $gutter 0;
+      content: 'or';
+    }
+  }
+}

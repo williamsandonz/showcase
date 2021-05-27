@@ -1,0 +1,51 @@
+app: monorepo
+custom:
+  bucketName: ${self:custom.name}
+  cloudfrontOriginId: ${self:custom.name}-cloud-front
+  cloudfrontInvalidate:
+    - distributionIdKey: 'cloudFrontDistributionId'
+      items:
+        - "/*"
+  customCertificate:
+    certificateName: ${env:WEB_URI_WITH_WWW}
+    hostedZoneNames: ${env:GLOBAL_AWS_ROUTE53_HOSTED_ZONE_DOMAIN_NAME}.
+    subjectAlternativeNames:
+      - '${env:WEB_URI_WITHOUT_WWW}'
+  name: ${self:app}-${self:provider.stage}-${self:service}
+  s3Sync:
+    - bucketName: ${self:custom.bucketName}
+      localDir: ./../../dist/apps/web
+  websiteDomain:
+    cloudfrontOutputKey: 'cloudFrontDomainName'
+    domain: ${env:WEB_URI_WITH_WWW}
+    edgeLambda:
+      basicAuthCredentials: ${env:WEB_BASIC_AUTH_CREDENTIALS}
+      redirect:
+        from: ${env:WEB_URI_WITHOUT_WWW}
+        to: https://${env:WEB_URI_WITH_WWW}
+org: williamsandonz
+plugins:
+  - serverless-s3-sync
+  - serverless-cloudfront-invalidate
+  - serverless-certificate-creator
+  - serverless-website-domain
+provider:
+  name: aws
+  region: ${env:GLOBAL_AWS_REGION}
+  runtime: nodejs14.x
+  stackName: ${self:custom.name}
+  stage: ${env:SERVERLESS_STAGE}
+resources:
+  Outputs:
+    cloudFrontDistributionId:
+      Value:
+        Ref: CloudFrontDistribution
+    cloudFrontDomainName:
+      Value:
+        'Fn::GetAtt': [ CloudFrontDistribution, DomainName ]
+  Resources:
+    Bucket: ${file(./serverless-resources/S3Bucket.yml)}
+    BucketPolicy: ${file(./serverless-resources/S3BucketPolicy.yml)}
+    CloudFrontDistribution: ${file(./serverless-resources/CloudfrontDistribution.yml)}
+service: web
+variablesResolutionMode: 20210219

@@ -1,0 +1,9 @@
+<app-heading-panel [title]="organisationName" class="has-tabs"> </app-heading-panel>
+<div class="focal-column condensed">
+  <mat-tab-group class="heading-panel-tabs" dynamicHeight>
+    <mat-tab label="General">
+      <app-organisation-settings-general></app-organisation-settings-general>
+      <app-organisation-settings-members></app-organisation-settings-members>
+    </mat-tab>
+  </mat-tab-group>
+</div>

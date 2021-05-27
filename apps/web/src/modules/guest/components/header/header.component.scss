@@ -1,0 +1,65 @@
+@import './../../../../styles/includes';
+
+:host {
+  padding: 10px $gutter;
+  border-bottom: 1px solid $gray;
+  display: flex;
+  align-items: center;
+  background: white;
+  &.authenticated .menu-btn {
+    margin-left: 10px;
+  }
+}
+.logo {
+  height: 36px;
+  flex-basis: 126px;
+  display: flex;
+  background: url(https://via.placeholder.com/126x36);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.logo + ul {
+  margin-left: 40px;
+  display: none;
+  @include media-breakpoint-up(sm) {
+    display: flex;
+    flex: 1 0 auto;
+    li:nth-child(4) {
+      margin-left: auto;
+    }
+  }
+  a {
+    position: relative;
+    overflow: visible;
+    &:hover::after {
+      display: block;
+    }
+    &::after {
+      position: absolute;
+      bottom: -11px;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 3px;
+      display: none;
+      background-color: $blue;
+      content: '';
+    }
+  }
+}
+.menu-btn {
+  min-width: 20px;
+  padding: 0;
+  margin-left: auto;
+  font-size: 15px;
+  @include media-breakpoint-up(sm) {
+    display: none;
+  }
+  mat-icon {
+    margin-top: -2px;
+    font-size: 25px;
+  }
+}
+ul a:hover {
+  background: none;
+}

@@ -1,0 +1,4 @@
+<mat-spinner *ngIf="processing" diameter="20"></mat-spinner>
+<div [ngClass]="{ 'inacessible-content': processing }" (click)="onContentClick($event)">
+  <ng-content></ng-content>
+</div>

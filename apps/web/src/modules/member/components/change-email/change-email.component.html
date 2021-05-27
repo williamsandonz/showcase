@@ -1,0 +1,20 @@
+<h3 mat-dialog-title>Change email</h3>
+<div mat-dialog-content>
+  <div>
+    <form [formGroup]="form">
+      <mat-form-field>
+        <input formControlName="email" matInput placeholder="Email" required />
+        <mat-error [appFieldErrors]="form.controls.email"></mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+  <mat-error *ngIf="errorMessage">
+    {{ errorMessage }}
+  </mat-error>
+</div>
+<div mat-dialog-actions>
+  <app-async-button [processing]="processing">
+    <button mat-flat-button color="primary" (click)="onConfirm()">Change email</button>
+  </app-async-button>
+  <button mat-stroked-button color="warn" (click)="closeDialog()">Cancel</button>
+</div>

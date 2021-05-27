@@ -1,0 +1,156 @@
+app: monorepo
+custom:
+  name: ${self:app}-${self:provider.stage}-${self:service}
+  cognito:
+    poolName: ${self:app}-${self:provider.stage}
+  customDomain:
+    domainName: ${self:custom.domainComponents.full}
+    certificateName: ${self:custom.domainComponents.full}
+  customCertificate:
+    certificateName: ${self:custom.domainComponents.full}
+    hostedZoneNames: ${env:GLOBAL_AWS_ROUTE53_HOSTED_ZONE_DOMAIN_NAME}.
+  domainComponents:
+    full: ${self:custom.domainComponents.subDomain.${env:SERVERLESS_STAGE}}.${env:GLOBAL_AWS_ROUTE53_HOSTED_ZONE_DOMAIN_NAME}
+    subDomain:
+      dev: ${env:SERVERLESS_STAGE}.${env:WEB_API_SUB_DOMAIN}
+      production: ${env:WEB_API_SUB_DOMAIN}
+  # Unfortunately serverless-offline plugin cannot resolve !Ref & !GetAtt values so to circumvent this
+  # force it to load from process.env instead
+  offlineMode:
+    true:
+      cognitoUserPoolClientId: ${env:GLOBAL_COGNITO_USER_POOL_CLIENT_ID}
+      cognitoUserPoolDomain: ${env:GLOBAL_COGNITO_USER_POOL_DOMAIN}
+      cognitoUserPoolId: ${env:GLOBAL_COGNITO_USER_POOL_ID}
+      postgresHost: ${env:WEB_API_POSTGRES_HOST}
+      postgresPort: ${env:WEB_API_POSTGRES_PORT}
+    false:
+      cognitoUserPoolClientId:
+        Ref: CognitoUserPoolClient
+      cognitoUserPoolDomain:
+        Ref: CognitoUserPoolDomain
+      cognitoUserPoolId:
+        Ref: CognitoUserPool
+      postgresHost:
+        Fn::GetAtt: [RdsPostGres, Endpoint.Address]
+      postgresPort:
+        Fn::GetAtt: [RdsPostGres, Endpoint.Port]
+  outputToEnv:
+    fileName: ../../.env
+    map:
+      GLOBAL_COGNITO_USER_POOL_CLIENT_ID: CognitoUserPoolClientId
+      GLOBAL_COGNITO_USER_POOL_DOMAIN: CognitoUserPoolClientDomain
+      GLOBAL_COGNITO_USER_POOL_ID: CognitoUserPoolId
+      WEB_API_POSTGRES_HOST: PostGresEndpointAddress
+      WEB_API_POSTGRES_PORT: PostGresEndpointPort
+      WEB_API_URI: WebApiURI
+      WEB_URI_WITH_WWW: WebUriWithWWW
+      WEB_URI_WITHOUT_WWW: WebUriWithoutWWW
+    overwrite: false
+  serverless-offline:
+    httpsProtocol: "src/assets/local-ssl-certs"
+    noPrependStageInUrl: true
+  webpack:
+    includeModules:
+      packagePath: '../../package.json'
+    packager: 'npm'
+    webpackConfig: ./webpack.config.js
+  websiteUri:
+    withWWW: www.${self:custom.websiteUri.withoutWWW}
+    withoutWWW: ${self:custom.websiteUri.subDomain.${env:SERVERLESS_STAGE}}${env:GLOBAL_AWS_ROUTE53_HOSTED_ZONE_DOMAIN_NAME}
+    subDomain:
+      dev: ${env:SERVERLESS_STAGE}.
+      production: ""
+functions:
+  main:
+    events:
+      - http:
+          method: any
+          path: /{proxy+}
+    handler: src/main-lambda.handler
+    name: ${self:custom.name}-main
+  preSignUp:
+    handler: src/cognito-pre-sign-up.main
+    name: ${self:custom.name}-cognito-pre-sign-up
+    events:
+      - cognitoUserPool:
+          existing: true
+          pool: ${self:custom.cognito.poolName}
+          trigger: PreSignUp
+org: williamsandonz
+plugins:
+  - serverless-certificate-creator
+  - serverless-domain-manager
+  - serverless-output-to-env
+  - serverless-webpack #Must preceed serverless-offline
+  - serverless-offline
+provider:
+  apiName: ${self:custom.name}
+  environment:
+    GLOBAL_COGNITO_USER_POOL_CLIENT_ID: ${self:custom.offlineMode.${env:IS_OFFLINE}.cognitoUserPoolClientId}
+    GLOBAL_COGNITO_USER_POOL_DOMAIN: ${self:custom.offlineMode.${env:IS_OFFLINE}.cognitoUserPoolDomain}
+    GLOBAL_COGNITO_USER_POOL_ID: ${self:custom.offlineMode.${env:IS_OFFLINE}.cognitoUserPoolId}
+    GLOBAL_ENVIRONMENT: ${env:GLOBAL_ENVIRONMENT}
+    GLOBAL_GIT_COMMIT: ${env:GLOBAL_GIT_COMMIT}
+    GLOBAL_GIT_REF: ${env:GLOBAL_GIT_REF}
+    GLOBAL_GITHUB_RUN_NUMBER: ${env:GLOBAL_GITHUB_RUN_NUMBER}
+    NODE_ENV: ${env:NODE_ENV}
+    RELEASE: ${env:RELEASE}
+    WEB_API_EMAIL_NO_REPLY: ${env:WEB_API_EMAIL_NO_REPLY}
+    WEB_API_POSTGRES_DB: ${env:WEB_API_POSTGRES_DB}
+    WEB_API_POSTGRES_HOST: ${self:custom.offlineMode.${env:IS_OFFLINE}.postgresHost}
+    WEB_API_POSTGRES_LOGGING: ${env:WEB_API_POSTGRES_LOGGING}
+    WEB_API_POSTGRES_PASSWORD: ${env:WEB_API_POSTGRES_PASSWORD}
+    WEB_API_POSTGRES_PORT: ${self:custom.offlineMode.${env:IS_OFFLINE}.postgresPort}
+    WEB_API_POSTGRES_USER: ${env:WEB_API_POSTGRES_USER}
+    WEB_API_SENTRY_DSN: ${env:WEB_API_SENTRY_DSN}
+    WEB_API_SMTP_DEBUG: ${env:WEB_API_SMTP_DEBUG}
+    WEB_API_SMTP_HOST: ${env:WEB_API_SMTP_HOST}
+    WEB_API_SMTP_PASSWORD: ${env:WEB_API_SMTP_PASSWORD}
+    WEB_API_SMTP_PORT: ${env:WEB_API_SMTP_PORT}
+    WEB_API_SMTP_USERNAME: ${env:WEB_API_SMTP_USERNAME}
+    WEB_API_STRIPE_SECRET: ${env:WEB_API_STRIPE_SECRET}
+    WEB_API_WITH_WWW: ${self:custom.websiteUri.withWWW}
+    WEB_API_URI: https://${self:custom.domainComponents.full}
+  memorySize: ${env:WEB_API_LAMBDA_MEMORY_SIZE}
+  name: aws
+  region: ${env:GLOBAL_AWS_REGION}
+  runtime: nodejs14.x
+  stackName: ${self:custom.name}
+  stage: ${env:SERVERLESS_STAGE}
+  versionFunctions: false
+resources:
+  Conditions:
+    IsDev: !Equals ["${env:SERVERLESS_STAGE}", "dev"]
+    IsProduction: !Equals ["${env:SERVERLESS_STAGE}", "production"]
+  Outputs:
+    CognitoUserPoolClientId:
+      Value:
+        Ref: CognitoUserPoolClient
+    CognitoUserPoolClientDomain:
+      Value:
+        Ref: CognitoUserPoolDomain
+    CognitoUserPoolId:
+      Value:
+        Ref: CognitoUserPool
+    PostGresEndpointAddress:
+      Value:
+        Fn::GetAtt: [RdsPostGres, Endpoint.Address]
+    PostGresEndpointPort:
+      Value:
+        Fn::GetAtt: [RdsPostGres, Endpoint.Port]
+    WebApiURI:
+      Value: ${self:provider.environment.WEB_API_URI}
+    WebUriWithWWW:
+      Value:
+        ${self:custom.websiteUri.withWWW}
+    WebUriWithoutWWW:
+      Value:
+        ${self:custom.websiteUri.withoutWWW}
+  Resources:
+    CognitoUserPool: ${file(./serverless-resources/CognitoUserPool.yml)}
+    CognitoUserPoolClient: ${file(./serverless-resources/CognitoUserPoolClient.yml)}
+    CognitoUserPoolDomain: ${file(./serverless-resources/CognitoUserPoolDomain.yml)}
+    CognitoUserPoolIdentityProvider: ${file(./serverless-resources/CognitoUserPoolIdentityProvider.yml)}
+    RdsLambdaRole: ${file(./serverless-resources/RdsLambdaRole.yml)}
+    RdsPostGres: ${file(./serverless-resources/RdsPostGres.yml)}
+service: web-api

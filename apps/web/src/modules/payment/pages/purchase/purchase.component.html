@@ -1,0 +1,43 @@
+<form *ngIf="!purchaseComplete && !failure" (ngSubmit)="onSubmit()" [formGroup]="form">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title class="mat-h2">Purchase</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field>
+        <input formControlName="name" matInput maxLength="30" placeholder="Name" required />
+        <mat-error [appFieldErrors]="form.controls.name"></mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <app-stripe-card
+          (cardElementReady)="onStripeCardElementReady($event)"
+          [formControl]="form.controls.card"
+          [submitted]="submitted"
+        >
+        </app-stripe-card>
+        <mat-error [appFieldErrors]="form.controls.card"></mat-error>
+      </mat-form-field>
+      <div class="vertical-checkboxes">
+        <mat-checkbox formControlName="saveCard" class="text-wrap"> Save card for future payments </mat-checkbox>
+      </div>
+    </mat-card-content>
+    <mat-error *ngIf="errorMessage">
+      {{ errorMessage }}
+    </mat-error>
+    <mat-card-actions>
+      <app-async-button [processing]="processing">
+        <button mat-flat-button color="primary" type="submit">Pay</button>
+      </app-async-button>
+    </mat-card-actions>
+  </mat-card>
+</form>
+<div *ngIf="purchaseComplete || failure">
+  <app-heading-panel [title]="failure ? 'Payment failed' : 'Payment complete'" class="has-tabs"> </app-heading-panel>
+  <div class="focal-column condensed">
+    <mat-error *ngIf="failure">
+      Something has gone wrong and we cannot take payment at this time, our developers will look into it, please try
+      again later.
+    </mat-error>
+    <p *ngIf="purchaseComplete">Your payment was a success!</p>
+  </div>
+</div>

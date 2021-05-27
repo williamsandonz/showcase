@@ -1,0 +1,15 @@
+<a class="logo" routerLink="/"></a>
+<ng-container *ngTemplateOutlet="linkTemplate; context: { $implicit: false }"></ng-container>
+<button mat-button [matMenuTriggerFor]="menu" class="menu-btn">
+  <mat-icon>menu</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+  <ng-container *ngTemplateOutlet="linkTemplate; context: { $implicit: true }"></ng-container>
+</mat-menu>
+<ng-template #linkTemplate let-displayAsMenu>
+  <ul>
+    <li *ngFor="let link of links">
+      <a [routerLink]="link.path" mat-menu-item="displayAsMenu">{{ link.text }}</a>
+    </li>
+  </ul>
+</ng-template>

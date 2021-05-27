@@ -1,0 +1,15 @@
+:host {
+  position: relative;
+  display: inline-block;
+}
+.inacessible-content {
+  display: inline-block;
+  opacity: 0;
+}
+mat-spinner {
+  position: absolute;
+  left: 50%;
+  margin-left: -10px;
+  top: 50%;
+  margin-top: -9px;
+}

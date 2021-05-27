@@ -1,0 +1,106 @@
+app: monorepo
+custom:
+  customDomain:
+    websocket:
+      apiType: websocket
+      domainName: ${self:custom.domainComponents.full}
+      certificateName: ${self:custom.domainComponents.full}
+      endpointType: regional
+  customCertificate:
+    certificateName: ${self:custom.domainComponents.full}
+    hostedZoneNames: ${env:GLOBAL_AWS_ROUTE53_HOSTED_ZONE_DOMAIN_NAME}.
+    region: ${env:GLOBAL_AWS_REGION}
+  domainComponents:
+    full: ${self:custom.domainComponents.subDomain.${env:SERVERLESS_STAGE}}.${env:GLOBAL_AWS_ROUTE53_HOSTED_ZONE_DOMAIN_NAME}
+    subDomain:
+      dev: ${env:SERVERLESS_STAGE}.${env:SDK_API_SUB_DOMAIN}
+      production: ${env:SDK_API_SUB_DOMAIN}
+  name: ${self:app}-${self:provider.stage}-${self:service}
+  # Unfortunately serverless-offline plugin cannot resolve !Ref & !GetAtt values so to circumvent this
+  # force it to load from process.env instead
+  offlineMode:
+    true:
+      postgresHost: ${env:SDK_API_POSTGRES_HOST}
+      postgresPort: ${env:SDK_API_POSTGRES_PORT}
+    false:
+      postgresHost:
+        Fn::GetAtt: [RdsPostGres, Endpoint.Address]
+      postgresPort:
+        Fn::GetAtt: [RdsPostGres, Endpoint.Port]
+  outputToEnv:
+    fileName: ../../.env
+    map:
+      SDK_API_POSTGRES_HOST: PostGresEndpointAddress
+      SDK_API_POSTGRES_PORT: PostGresEndpointPort
+      SDK_API_URI: SdkApiURI
+    overwrite: false
+  serverless-offline:
+    httpsProtocol: "src/assets/local-ssl-certs"
+    noPrependStageInUrl: true
+  webpack:
+    includeModules:
+      packagePath: '../../package.json'
+    packager: 'npm'
+    webpackConfig: ./webpack.config.js
+functions:
+  main:
+    handler: src/main-lambda.handler
+    events:
+      - websocket:
+          route: $default
+      - websocket:
+          route: $connect
+      - websocket:
+          route: $disconnect
+org: williamsandonz
+plugins:
+  - serverless-certificate-creator
+  - serverless-domain-manager
+  - serverless-output-to-env
+  - serverless-webpack #Must preceed serverless-offline
+  - serverless-offline
+provider:
+  environment:
+    GLOBAL_ENVIRONMENT: ${env:GLOBAL_ENVIRONMENT}
+    GLOBAL_GIT_REF: ${env:GLOBAL_GIT_REF}
+    GLOBAL_GIT_COMMIT: ${env:GLOBAL_GIT_COMMIT}
+    GLOBAL_GITHUB_RUN_NUMBER: ${env:GLOBAL_GITHUB_RUN_NUMBER}
+    NODE_ENV: ${env:NODE_ENV}
+    RELEASE: ${env:RELEASE}
+    SDK_API_POSTGRES_DB: ${env:SDK_API_POSTGRES_DB}
+    SDK_API_POSTGRES_HOST: ${self:custom.offlineMode.${env:IS_OFFLINE}.postgresHost}
+    SDK_API_POSTGRES_LOGGING: ${env:SDK_API_POSTGRES_LOGGING}
+    SDK_API_POSTGRES_PASSWORD: ${env:SDK_API_POSTGRES_PASSWORD}
+    SDK_API_POSTGRES_PORT: ${self:custom.offlineMode.${env:IS_OFFLINE}.postgresPort}
+    SDK_API_POSTGRES_USER: ${env:SDK_API_POSTGRES_USER}
+    SDK_API_SENTRY_DSN: ${env:SDK_API_SENTRY_DSN}
+    SDK_API_URI: https://${self:custom.domainComponents.full}
+    WEB_URI_WITH_WWW: ${env:WEB_URI_WITH_WWW}
+  logs:
+    websocket: true
+  memorySize: ${env:SDK_API_LAMBDA_MEMORY_SIZE}
+  name: aws
+  region: ${env:GLOBAL_AWS_REGION}
+  runtime: nodejs14.x
+  stackName: ${self:custom.name}
+  stage: ${env:SERVERLESS_STAGE}
+  versionFunctions: false
+  websocketsApiName: ${self:custom.name}
+  websocketsApiRouteSelectionExpression: $request.body.action
+resources:
+  Conditions:
+    IsDev: !Equals ["${env:SERVERLESS_STAGE}", "dev"]
+    IsProduction: !Equals ["${env:SERVERLESS_STAGE}", "production"]
+  Outputs:
+    PostGresEndpointAddress:
+      Value:
+        Fn::GetAtt: [RdsPostGres, Endpoint.Address]
+    PostGresEndpointPort:
+      Value:
+        Fn::GetAtt: [RdsPostGres, Endpoint.Port]
+    SdkApiURI:
+      Value: ${self:provider.environment.SDK_API_URI}
+  Resources:
+    RdsLambdaRole: ${file(./serverless-resources/RdsLambdaRole.yml)}
+    RdsPostGres: ${file(./serverless-resources/RdsPostGres.yml)}
+service: sdk-api

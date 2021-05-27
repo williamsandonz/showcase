@@ -1,0 +1,21 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title class="mat-h2">Create a new Project</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field>
+        <input formControlName="name" matInput maxLength="30" placeholder="Name" required />
+        <mat-error [appFieldErrors]="form.controls.name"></mat-error>
+      </mat-form-field>
+      <mat-error *ngIf="unexpectedRequestError">
+        Oh no! Something has gone wrong. We'll look into it, please try again later.
+      </mat-error>
+    </mat-card-content>
+    <mat-card-actions>
+      <app-async-button [processing]="processing">
+        <button mat-flat-button color="primary" type="submit">Create</button>
+      </app-async-button>
+    </mat-card-actions>
+  </mat-card>
+</form>

@@ -1,0 +1,26 @@
+@import './../../../../styles/includes';
+
+form {
+  position: relative;
+}
+.change-email-btn {
+  margin-bottom: 15px;
+  display: block;
+}
+.change-password-btn {
+  margin-bottom: 15px;
+  display: block;
+}
+.verification-status {
+  display: flex;
+  span {
+    margin: 1px 0 0 5px;
+  }
+}
+.verified {
+}
+.unverified {
+  mat-icon {
+    color: map-get($warn-palette, 500);
+  }
+}

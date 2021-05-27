@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+app-async-button {
+  display: block;
+}
+.google-button {
+  width: 150px;
+  height: 36px;
+  display: block;
+  background: url(/assets/images/sign-in-with-google.png) 0 0 no-repeat;
+  background-size: contain;
+  cursor: pointer;
+}
