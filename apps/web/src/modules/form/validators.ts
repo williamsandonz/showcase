@@ -2,7 +2,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { IApiResponse } from '@monorepo/api-client';
 
-export function applyServerErrorsToForm(response: HttpErrorResponse, form: FormGroup) : boolean {
+export function applyServerErrorsToFormControls(response: HttpErrorResponse, form: FormGroup) : boolean {
   if (!response.error || response.status !== 400) {
     return false;
   }

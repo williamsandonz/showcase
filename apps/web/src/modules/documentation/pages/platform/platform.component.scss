@@ -1,0 +1,14 @@
+@import './../../../../styles/includes';
+
+.platform-column {
+  margin: 0 auto;
+  max-width: 1200px;
+  @include media-breakpoint-up(lg) {
+    display: flex;
+    > div {
+      position: relative;
+      flex: 1;
+      padding-right: 30px;
+    }
+  }
+}

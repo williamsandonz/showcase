@@ -1,6 +1,10 @@
 @import 'includes';
 @import '~@angular/material/theming';
+@import 'libs/gridlex/gridlex';
+@import '~highlight.js/styles/stackoverflow-dark.css';
+
 @include mat-core();
+
 /****************************************************************
 ***************************** Theme  ****************************
 ****************************************************************/
@@ -14,11 +18,12 @@ $theme: mat-light-theme($primary, $accent, $warn);
 ****************************************************************/
 $typography: mat-typography-config(
   $font-family: "'Open Sans', sans-serif",
-  $headline: mat-typography-level(37px, 50px, 600),
-  $title: mat-typography-level(23px, 30px, 600),
-  $subheading-2: mat-typography-level(19px, 24px, 600),
-  $subheading-1: mat-typography-level(16px, 21px, 600),
+  $headline: mat-typography-level(30px, 45px, 600),
+  $title: mat-typography-level(22px, 33px, 600),
+  $subheading-2: mat-typography-level(19px, 29px, 600),
+  $subheading-1: mat-typography-level(17px, 26px, 600),
   $body-1: mat-typography-level(15px, 22px, 400),
+  $body-2: mat-typography-level(16px, 24px, 400),
 );
 @include angular-material-typography($typography);
 .mat-typography .mat-h1,
@@ -28,21 +33,92 @@ $typography: mat-typography-config(
 .mat-typography .mat-h3,
 .mat-typography h3,
 .mat-typography .mat-h4,
-.mat-typography h4 {
+.mat-typography h4,
+.mat-typography .mat-h5,
+.mat-typography h5,
+.mat-typography .mat-h6,
+.mat-typography h6   {
   font-family: 'Montserrat';
 }
 .mat-typography .mat-h1,
 .mat-typography h1 {
+  @include media-breakpoint-up(md) {
+    font-size: 36px;
+    line-height: 54px;
+  }
   @include media-breakpoint-up(lg) {
-    font-size: 45px;
-    line-height: 60px;
+    font-size: 44px;
+    line-height: 66px;
+  }
+  @include media-breakpoint-up(xl) {
+    font-size: 48px;
+    line-height: 72px;
   }
 }
 .mat-typography .mat-h2,
 .mat-typography h2 {
+  @include media-breakpoint-up(md) {
+    font-size: 26px;
+    line-height: 39px;
+  }
   @include media-breakpoint-up(lg) {
     font-size: 28px;
-    line-height: 38px;
+    line-height: 42px;
+  }
+}
+.mat-typography .mat-h3,
+.mat-typography h3 {
+  @include media-breakpoint-up(md) {
+    font-size: 22px;
+    line-height: 33px;
+  }
+  @include media-breakpoint-up(lg) {
+    font-size: 24px;
+    line-height: 36px;
+  }
+  @include media-breakpoint-up(xl) {
+    font-size: 26px;
+    line-height: 39px;
+  }
+}
+.mat-typography .mat-h4,
+.mat-typography h4 {
+  @include media-breakpoint-up(md) {
+    font-size: 20px;
+    line-height: 30px;
+  }
+  @include media-breakpoint-up(lg) {
+    font-size: 21px;
+    line-height: 32px;
+  }
+  @include media-breakpoint-up(xl) {
+    font-size: 23px;
+    line-height: 35px;
+  }
+}
+.mat-typography .mat-h5,
+.mat-typography h5 {
+  font-weight: 600;
+  font-size: 16px;
+  @include media-breakpoint-up(md) {
+    font-size: 18px;
+    line-height: 27px;
+  }
+  @include media-breakpoint-up(lg) {
+    font-size: 19px;
+    line-height: 28px;
+  }
+}
+.mat-typography .mat-h6,
+.mat-typography h6 {
+  text-transform: uppercase;
+  font-size: 15px;
+  line-height: 23px;
+  letter-spacing: 0.3px;
+  font-weight: bold;
+  @include media-breakpoint-up(lg) {
+    font-size: 16px;
+    line-height: 24px;
   }
 }
 
@@ -50,10 +126,14 @@ $typography: mat-typography-config(
 .mat-body-2 {
   ul {
     padding-left: 20px;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
   }
   li {
     list-style-type: disc;
+  }
+  @include media-breakpoint-up(md) {
+    font-size: 16px;
+    line-height: 24px;
   }
 }
 a {
@@ -63,6 +143,14 @@ a {
 }
 mat-icon {
   color: $purple;
+  &.warn,
+  .warning & {
+    color: $red;
+  }
+  &.success,
+  .success & {
+    color: $green;
+  }
 }
 .mat-flat-button mat-icon {
   color: white;
@@ -80,8 +168,14 @@ body {
 app-root > router-outlet + * {
   flex: 1;
 }
+app-root-account > router-outlet + *,
+app-root-documentation > router-outlet + *,
 app-root-guest > router-outlet + *,
-app-root-member router-outlet + * {
+app-root-member > router-outlet + *,
+app-root-organisation > router-outlet + *,
+app-root-product > router-outlet + *,
+app-root-project > router-outlet + *
+{
   padding: 0 $gutter;
   flex: 1;
 }
@@ -124,22 +218,32 @@ mat-checkbox.text-wrap {
 .pseudo-mat-form-field {
   margin-top: 10px;
 }
+mat-error + app-async-button,
+mat-form-field + app-async-button {
+  margin-top: 15px;
+}
 /****************************************************************
 **************************** Card  ******************************
 ****************************************************************/
-mat-card.form-card {
-  max-width: 400px;
-  padding: 20px;
-  margin: 40px auto;
-  border: 1px solid $gray;
-  border-radius: 4px;
-  @include media-breakpoint-up(sm) {
-    margin: 100px auto;
+mat-card {
+  &.form-card {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 400px;
+    padding: 20px;
+    border: 1px solid $gray;
+    border-radius: $border-radius;
+    .mat-card-header-text {
+      margin-left: 0;
+      mat-card-title {
+        margin-bottom: 15px;
+      }
+    }
   }
-  .mat-card-header-text {
-    margin-left: 0;
-    mat-card-title {
-      margin-bottom: 15px;
+  &.full-page-card {
+    margin-top: 40px;
+    @include media-breakpoint-up(sm) {
+      margin: 100px auto;
     }
   }
 }
@@ -157,10 +261,13 @@ mat-card-actions.adjacent {
 ****************************************************************/
 .principal-column {
   margin: 0 auto;
-  @include media-breakpoint-up(sm) {
-    width: 62%;
+  @include media-breakpoint-up(md) {
+    width: 75%;
   }
   @include media-breakpoint-up(lg) {
+    width: 65%;
+  }
+  @include media-breakpoint-up(xl) {
     width: 50%;
   }
 }
@@ -170,7 +277,7 @@ mat-card-actions.adjacent {
 .focal-column {
   padding: 0 0;
   margin: 0 auto;
-  max-width: 700px;
+  max-width: 1090px;
   &.condensed {
     max-width: 500px;
   }
@@ -202,12 +309,6 @@ mat-card-actions.adjacent {
 .mat-progress-spinner circle,
 .mat-spinner circle {
   stroke: black;
-}
-/****************************************************************
-*********************** Success message  ************************
-****************************************************************/
-.success-message {
-  color: $green;
 }
 /****************************************************************
 ************************* Stroked button  ***********************
@@ -251,9 +352,7 @@ mat-card-actions.adjacent {
 ************************ Heading Panel tabs  ********************
 ****************************************************************/
 .heading-panel-tabs {
-  &.mat-tab-group {
-    margin-top: -88px;
-  }
+  margin: -88px 0 $heading-panel-margin-bottom;
   .mat-tab-header {
     margin: 0;
     border-bottom: none;
@@ -261,7 +360,7 @@ mat-card-actions.adjacent {
   .mat-tab-body-content {
     overflow: visible;
   }
-  .mat-tab-labels {
+  .mat-tab-links {
     justify-content: center;
   }
   .mat-tab-body {
@@ -280,5 +379,416 @@ mat-card-actions.adjacent {
       margin: 6px $gutter 0;
       content: 'or';
     }
+  }
+}
+/****************************************************************
+************************** Titled List  *************************
+****************************************************************/
+.titled-list {
+  background: #faf9fb;
+  border: 1px solid $grey-rgba;
+  border-radius: $border-radius;
+  strong {
+    padding: 5px $gutter;
+    border-bottom: 1px solid $grey-rgba;
+    display: block;
+  }
+  .no-items {
+    padding: 5px $gutter;
+  }
+  > ul {
+    padding: 0;
+    background: white;
+    border-radius: $border-radius;
+    > li {
+      padding: 5px $gutter;
+      border-bottom: 1px solid $grey-rgba;
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+  @include media-breakpoint-up(md) {
+    .has-actions {
+      display: flex;
+      ul {
+        margin-left: auto;
+        display: flex;
+        li {
+          position: relative;
+          padding-left: $gutter;
+          &:first-child {
+            padding-left: 0;
+          }
+          &::before {
+            position: absolute;
+            left: 4px;
+            content: '|';
+            color: #999;
+          }
+          &:first-child::before {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
+/****************************************************************
+****************************** CTA  *****************************
+****************************************************************/
+.cta {
+  display: flex;
+  align-items: center;
+  background-color: rgba(211, 222, 246, 0.3);
+  border: 1px dashed $blue-denim;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: $border-radius;
+  cursor: pointer;
+  strong {
+    margin: 0 ($gutter * 2) 0 $gutter;
+  }
+  mat-icon {
+    color: black;
+    &:last-child {
+      margin-left: auto;
+    }
+  }
+}
+/****************************************************************
+************************** Responsive  **************************
+****************************************************************/
+.responsive {
+  max-width: 100%;
+  height: auto;
+}
+/****************************************************************
+************************* Image promos  *************************
+****************************************************************/
+.image-promos {
+  margin: 0 (-$gutter);
+  padding: 40px $gutter;
+  li {
+    margin-top: 40px;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  div {
+    margin-top: 20px;
+  }
+  p {
+    margin: 0 0 20px;
+    line-height: $promo-paragraph-line-height;
+  }
+  img {
+    box-shadow: 0 2px 0 rgb(54 45 89 / 15%), 0 0 100px rgb(54 45 89 / 20%);
+  }
+  @include media-breakpoint-up(sm) {
+    li {
+      display: flex;
+      &.standard {
+        flex-direction: row;
+        div {
+          padding-left: $gutter;
+        }
+      }
+      &.reverse {
+        flex-direction: row-reverse;
+        div {
+          padding-right: $gutter;
+        }
+      }
+    }
+    div {
+      margin-top: 0;
+      flex: 1 1 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    img {
+      width: 45%;
+    }
+    button {
+      align-self: flex-start;
+    }
+  }
+  @include media-breakpoint-up(lg) {
+    li {
+      &.standard {
+        div {
+          padding-left: ($gutter * 2);
+        }
+      }
+      &.reverse {
+        div {
+          padding-right: ($gutter * 2);
+        }
+      }
+    }
+  }
+}
+/****************************************************************
+************************** Promo panel  *************************
+****************************************************************/
+.promo-panel {
+  padding: 40px 0;
+  .panel-heading {
+    .mat-h6,
+    h6 {
+      margin: 0 0 5px;
+      display: block;
+      text-align: center;
+      @include media-breakpoint-up(lg) {
+        padding-top: 30px;
+      }
+    }
+    .mat-h2,
+    h2 {
+      margin: 0 0 30px;
+      display: block;
+      text-align: center;
+      @include media-breakpoint-up(lg) {
+        margin-bottom: 45px;
+      }
+    }
+  }
+  &.facet-panel {
+    p {
+      line-height: $promo-paragraph-line-height;
+    }
+    @include media-breakpoint-up(lg) {
+      ul {
+        margin-bottom: 2px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      li {
+        width: 33.3%;
+        padding: 0 ($gutter * 2);
+        box-sizing: border-box;
+      }
+    }
+    button {
+      margin: 0 auto;
+      display: block;
+    }
+  }
+}
+/****************************************************************
+************************** Vimeo panel  *************************
+****************************************************************/
+.vimeo-panel {
+  padding: 40px 0;
+  text-align: center;
+  .mat-h6,
+    h6 {
+      margin-bottom: 30px;
+      display: block;
+      @include media-breakpoint-up(lg) {
+        margin-bottom: 40px;
+      }
+    }
+    .mat-h2,
+    h2 {
+      margin-bottom: 10px;
+    }
+}
+/****************************************************************
+************************** Hero panel  *************************
+****************************************************************/
+.hero-panel {
+  position: relative;
+  margin: 0 (-$gutter);
+  background-color: $temp1;
+  .text {
+    padding: 30px $gutter;
+    color: white;
+  }
+  p {
+    line-height: $promo-paragraph-line-height;
+  }
+  button {
+    margin-top: 15px;
+  }
+  &::before {
+    position: absolute;
+    content: ' ';
+    right: 0;
+    bottom: 0;
+    width: 550px;
+    height: 100%;
+    display: none;
+    background: url(/assets/images/guest-home-hero-temp.png) no-repeat;
+    background-position: 0 100%;
+  }
+  @include media-breakpoint-up(sm) {
+    .text {
+      padding: 30px 30px 30px $gutter;
+    }
+  }
+  @include media-breakpoint-up(lg) {
+    .text {
+      max-width: 400px;
+      text-align: left;
+    }
+    &::before {
+      display: block;
+    }
+  }
+  @include media-breakpoint-up(xl) {
+    .text {
+      padding-left: 0;
+    }
+  }
+}
+/****************************************************************
+************************* Titled-list  **************************
+****************************************************************/
+mat-tab-body .titled-list {
+  margin-top: 30px;
+}
+/****************************************************************
+************************* Paginator  ****************************
+****************************************************************/
+.mat-paginator {
+  background: none;
+}
+/****************************************************************
+************************ Expansion Panel  ***********************
+****************************************************************/
+mat-expansion-panel-header {
+  mat-panel-description {
+    justify-content: flex-end;
+    mat-icon {
+      margin-left: 40px;
+      color: $gray-dark;
+    }
+    span {
+      display: none;
+      @include media-breakpoint-up(sm) {
+        display: inline;
+      }
+    }
+  }
+}
+/****************************************************************
+************************* Scroll target  ************************
+****************************************************************/
+.scroll-target {
+  display: flex;
+  &:hover a {
+    display: flex;
+  }
+  a {
+    align-items: center;
+    margin-left: 5px;
+    text-decoration: none;
+    display: none;
+    mat-icon {
+      height: 17px;
+      font-size: 18px;
+      @include media-breakpoint-up(sm) {
+        height: 24px;
+        font-size: 23px;
+      }
+    }
+  }
+}
+/****************************************************************
+**************************** Gridlex  ***************************
+****************************************************************/
+.col {
+  &.auto-width {
+    flex: none;
+  }
+}
+/****************************************************************
+*************************** Box links  **************************
+****************************************************************/
+.box-link {
+  margin: 0 auto;
+  padding: 15px $gutter;
+  display: block;
+  background: white;
+  border-radius: $border-radius;
+  box-shadow: 0 2px 0 rgb(54 45 89 / 15%);
+  text-decoration: none;
+  transition-property: box-shadow,border-color;
+  transition-duration: .25s;
+  transition-timing-function: ease-out;
+  cursor: pointer;
+  text-align: center;
+  width: 75px;
+  @include media-breakpoint-up(md) {
+    width: 120px;
+  }
+  @include media-breakpoint-up(lg) {
+    width: 160px;
+  }
+  img {
+    margin: 0 auto 15px;
+    display: block;
+  }
+  span {
+    color: black;
+  }
+  &:hover,
+  &.active {
+    box-shadow: 0 2px 0 rgb(54 45 89 / 15%), -0.1875rem -0.1875rem 0 0.1875rem map-get($primary-palette, 500), 0 0 0 0.375rem map-get($accent-palette, 500);
+  }
+}
+
+/****************************************************************
+*************************** Highlight  **************************
+****************************************************************/
+pre {
+  white-space: normal;
+  margin: 22px 0 30px;
+  code {
+    white-space: pre;
+  }
+}
+/****************************************************************
+*************************** CTA Panel  **************************
+****************************************************************/
+.cta-panel {
+  padding: 40px $gutter;
+  margin: 0 (-$gutter);
+  background-color: $temp1;
+  color: white;
+  text-align: center;
+  @include media-breakpoint-up(lg) {
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+}
+/****************************************************************
+************************ State indicator  ***********************
+****************************************************************/
+.state-indicator {
+  padding: 5px 7px;
+  border-radius: $border-radius;
+  display: flex;
+  mat-icon {
+    margin-right: 5px;
+  }
+  &.condensed {
+    padding: 0px 2px;
+    font-size: 13px;
+  }
+  &.success {
+    color: $green;
+    background: $green-light;
+    border: 1px solid $green-light2;
+  }
+  &.warning {
+    color: $red;
+    background: $red-light;
+    border: 1px solid $red-light2;
   }
 }

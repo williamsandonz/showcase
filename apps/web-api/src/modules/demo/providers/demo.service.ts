@@ -1,22 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Demo } from './../entities/';
-import { Repository } from 'typeorm';
-import { IDemoPostRequestDto } from '../dto';
+import { DemoPostRequestDto } from '../dto';
+import { DatabaseService } from '../../common/providers';
 
 @Injectable()
 export class DemoService {
   constructor(
-    @InjectRepository(Demo)
-    public repo: Repository<Demo>
+    private databaseService: DatabaseService,
   ) {}
 
   get(id: number): Promise<Demo> {
-    return this.repo.findOne(id);
+    return this.databaseService.getRepository(Demo).findOne(id);
   }
 
-  save(dto: IDemoPostRequestDto): Promise<Demo> {
-    return this.repo.save({
+  save(dto: DemoPostRequestDto): Promise<Demo> {
+    return this.databaseService.getRepository(Demo).save({
       foo: dto.foo,
     } as Demo);
   }

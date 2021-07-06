@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { ProjectPermissionType, IProjectPermission } from '@monorepo/web-api-client';
+import { ProjectPermissionType, IProjectPermissionVm } from '@monorepo/web-api-client';
 
 @Entity()
 export class ProjectPermission {
@@ -19,7 +19,7 @@ export class ProjectPermission {
   })
   type: ProjectPermissionType;
 
-  transformForResponse(): IProjectPermission {
+  mapToViewModel(): IProjectPermissionVm {
     return {
       description: this.description,
       id: this.id,

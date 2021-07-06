@@ -8,6 +8,7 @@ import { PaymentModule } from '../payment/payment.module';
 import { getDatabaseConfig } from '../../config';
 import { OrganisationModule } from '../organisation/organisation.module';
 import { ProjectModule } from '../project/project.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ProjectModule } from '../project/project.module';
     ProjectModule,
     SeedModule,
     TypeOrmModule.forRoot(getDatabaseConfig()),
+    UserModule,
   ],
   controllers: [],
   providers: [],

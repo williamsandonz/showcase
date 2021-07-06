@@ -2,7 +2,8 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { cognitoPasswordValidators, CognitoService } from '../../../shared/providers';
+import { cognitoPasswordValidator, CognitoService } from '../../../shared/providers';
+import { httpRequestFailureMessage } from '../../../shared/common';
 
 @Component({
   selector: 'app-reset-password',
@@ -14,7 +15,6 @@ export class ResetPasswordComponent implements OnInit {
   errorMessage: string;
   form: FormGroup;
   processing: boolean;
-  success: boolean;
 
   constructor(
     public cognitoService: CognitoService,
@@ -27,12 +27,12 @@ export class ResetPasswordComponent implements OnInit {
   ngOnInit() {
     this.form = this.formBuilder.group({
       code: ['', [Validators.required]],
-      password1: ['', cognitoPasswordValidators],
+      password1: ['', cognitoPasswordValidator],
       password2: ['', [Validators.required]],
     });
   }
 
-  closeDialog(dto?: ResetPasswordSuccessDto): void {
+  closeDialog(dto: ResetPasswordSuccessDto = null): void {
     this.dialogRef.close(dto);
   }
 
@@ -43,15 +43,12 @@ export class ResetPasswordComponent implements OnInit {
     this.processing = true;
     try {
       await this.cognitoService.resetPassword(this.data.email, this.form.value.code, this.form.value.password1);
-      this.success = true;
-      setTimeout(() => {
-        this.closeDialog({
-          email: this.data.email,
-          password: this.form.value.password1,
-        });
-      }, 2000);
+      this.closeDialog({
+        email: this.data.email,
+        password: this.form.value.password1,
+      });
     } catch (e) {
-      this.errorMessage = e.code === 'CodeMismatchException' ? 'Code is incorrect.' : 'Oops! Something has gone wrong';
+      this.errorMessage = e.code === 'CodeMismatchException' ? 'Code is incorrect.' : httpRequestFailureMessage
     } finally {
       this.processing = false;
     }

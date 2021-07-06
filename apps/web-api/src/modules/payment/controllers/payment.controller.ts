@@ -2,8 +2,8 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { CognitoClaims } from '../../common/decorators';
 import { PaymentService } from './../providers';
 import { IPaymentIntentResponseDto } from '@monorepo/web-api-client';
-import { CreatePaymentIntentRequestDto } from '../dto/create-payment-intent-request-dto';
-import { ConfirmPaymentIntentRequestDto } from '../dto/confirm-payment-intent-request-dto';
+import { CreatePaymentIntentRequestDto } from '../dto';
+import { ConfirmPaymentIntentRequestDto } from '../dto';
 
 @Controller('payment')
 export class PaymentController {

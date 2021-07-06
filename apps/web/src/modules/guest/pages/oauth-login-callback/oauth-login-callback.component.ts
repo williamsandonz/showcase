@@ -7,7 +7,9 @@ import { CognitoUser } from '@aws-amplify/auth';
 import { ISignUpRequestDto, constants } from '@monorepo/web-api-client';
 import { IApiResponse } from '@monorepo/api-client';
 import { CognitoService } from '../../../shared/providers';
-import { applyServerErrorsToForm } from '../../../form';
+import { applyServerErrorsToFormControls } from '../../../form';
+import { RoutingService } from '../../../shared/providers/routing.service';
+import { httpRequestFailureMessage } from '../../../shared/common';
 
 @Component({
   selector: 'app-oauth-login-callback',
@@ -18,6 +20,7 @@ export class OAuthLoginCallbackComponent {
   cognitoUser: CognitoUser;
   error = false;
   form: FormGroup;
+  formError: string;
   loading = true;
   processing = false;
   title = 'Loading';
@@ -27,13 +30,14 @@ export class OAuthLoginCallbackComponent {
     public formBuilder: FormBuilder,
     public httpClient: HttpClient,
     public router: Router,
+    private routingService: RoutingService,
     public titleService: Title
   ) {}
 
   async ngOnInit() {
-    this.titleService.setTitle(`${constants.appName} - Sign up`);
+    this.titleService.setTitle(`Sign up`);
     this.cognitoUser = await this.cognitoService.currentAuthenticatedUser(true);
-    this.httpClient.get(`/account/has-signed-up/${this.cognitoUser['attributes']['sub']}`).subscribe(
+    this.httpClient.get(`/user/has-signed-up/${this.cognitoUser['attributes']['sub']}`).subscribe(
       (response: IApiResponse<boolean>) => {
         const accountExists = response.payload;
         if (accountExists) {
@@ -62,13 +66,16 @@ export class OAuthLoginCallbackComponent {
     if (this.form.invalid) {
       return;
     }
+    this.formError = null;
     this.processing = true;
     const formValue = this.form.value;
     this.httpClient
-      .post('/account/sign-up', {
+      .post('/user/sign-up', {
         id: this.cognitoUser['attributes']['sub'],
+        email: this.cognitoUser['attributes']['email'],
         name: formValue.name,
         organisation: formValue.organisation,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
       } as ISignUpRequestDto)
       .subscribe(
         (response: IApiResponse<any>) => {
@@ -76,13 +83,15 @@ export class OAuthLoginCallbackComponent {
         },
         (response: HttpErrorResponse) => {
           this.processing = false;
-          applyServerErrorsToForm(response, this.form);
+          if(!applyServerErrorsToFormControls(response, this.form)) {
+            this.formError = httpRequestFailureMessage;
+          }
         }
       );
   }
 
   setAsAuthenticatedAndRedirect() {
     this.cognitoService.onAuthenticationStateChange(this.cognitoUser);
-    this.router.navigate(['/members/projects']);
+    this.routingService.goToOrganisationPage('projects');
   }
 }

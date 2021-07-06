@@ -3,8 +3,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import Stripe from 'stripe';
 import { AccountService } from '../../account/providers';
 import { StripeService } from '../../stripe/providers';
-import { ConfirmPaymentIntentRequestDto } from '../dto/confirm-payment-intent-request-dto';
-import { CreatePaymentIntentRequestDto } from '../dto/create-payment-intent-request-dto';
+import { ConfirmPaymentIntentRequestDto, CreatePaymentIntentRequestDto } from '../dto';
 
 @Injectable()
 export class PaymentService {

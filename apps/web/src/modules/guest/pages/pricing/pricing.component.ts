@@ -11,6 +11,6 @@ export class PricingComponent implements OnInit {
   constructor(public titleService: Title) {}
 
   ngOnInit() {
-    this.titleService.setTitle(`${constants.appName} - Pricing`);
+    this.titleService.setTitle(`Pricing`);
   }
 }

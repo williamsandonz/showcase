@@ -1,0 +1,14 @@
+<mat-accordion>
+  <mat-expansion-panel [expanded]="expandedPanelIndex === 0" (opened)="setExpandedPanelIndex(0)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Details
+      </mat-panel-title>
+      <mat-panel-description>
+        <span>{{ name }}</span>
+        <mat-icon>badge</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <app-edit-account-details (saved)="onDetailsSaved()"></app-edit-account-details>
+  </mat-expansion-panel>
+</mat-accordion>

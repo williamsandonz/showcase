@@ -1,0 +1,25 @@
+<form *ngIf="form" (ngSubmit)="onSubmit()" [formGroup]="form">
+  <mat-form-field>
+    <input formControlName="name" matInput maxLength="30" placeholder="Name" required />
+    <mat-error [appFieldErrors]="form.controls.name"></mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <input formControlName="slug" matInput maxLength="50" placeholder="Slug" required />
+    <mat-hint>This will change what you see in the URL on this website. I.E /projects/{{ form.value.slug }}</mat-hint>
+    <mat-error [appFieldErrors]="form.controls.slug"></mat-error>
+  </mat-form-field>
+  <mat-error *ngIf="formError">
+    {{ formError }}
+  </mat-error>
+  <app-async-button
+    [processing]="processing"
+    [success]="success">
+    <button
+      color="primary"
+      [disabled]="success"
+      mat-flat-button
+      type="submit">
+      Save
+    </button>
+  </app-async-button>
+</form>

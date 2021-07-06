@@ -1,4 +1,5 @@
-import { BadRequestException, Controller, Param, Post } from '@nestjs/common';
+import { IOrganisationMemberListResponseDto } from '@monorepo/web-api-client';
+import { BadRequestException, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { CognitoClaims } from '../../common/decorators';
 import { OrganisationMembershipService } from '../providers';
 
@@ -17,6 +18,18 @@ export class OrganisationMembershipController {
       throw new BadRequestException('Organisation param not provided');
     }
     return this.service.setSelectedForAccount(cognitoClaims.sub, organisationId);
+  }
+
+  @Get()
+  async onCurrentMembers(
+    @CognitoClaims() cognitoClaims,
+    @Query() query: any
+  ): Promise<IOrganisationMemberListResponseDto> {
+    return this.service.getCurrentOrganisationsMembersPaginated(
+      cognitoClaims.sub,
+      parseInt(query.page, 10),
+      parseInt(query.per_page, 10)
+    );
   }
 
 }

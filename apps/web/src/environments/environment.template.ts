@@ -14,6 +14,7 @@ export const environment = {
     region: '${GLOBAL_AWS_REGION}',
   },
   email: {
+    sales: '${GLOBAL_EMAIL_SALES}',
     support: '${GLOBAL_EMAIL_SUPPORT}',
   },
   enableProdMode: false,
@@ -21,6 +22,7 @@ export const environment = {
   exceptions: {
     sentryDsn: '${WEB_SENTRY_DSN}',
   },
+  recaptchaSiteKey: '${WEB_RECAPTCHA_SITE_KEY}',
   sdkApiUri: environmentName === 'local' ? 'https://localhost:3001' : '${SDK_API_URI}',
   stripe: {
     publishableKey: '${WEB_STRIPE_PUBLISHABLE_KEY}',

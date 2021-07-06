@@ -1,7 +1,7 @@
 <form *ngIf="!purchaseComplete && !failure" (ngSubmit)="onSubmit()" [formGroup]="form">
-  <mat-card class="form-card">
+  <mat-card class="form-card full-page-card">
     <mat-card-header>
-      <mat-card-title class="mat-h2">Purchase</mat-card-title>
+      <mat-card-title><h3>Purchase</h3></mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <mat-form-field>
@@ -33,7 +33,7 @@
 </form>
 <div *ngIf="purchaseComplete || failure">
   <app-heading-panel [title]="failure ? 'Payment failed' : 'Payment complete'" class="has-tabs"> </app-heading-panel>
-  <div class="focal-column condensed">
+  <div class="focal-column">
     <mat-error *ngIf="failure">
       Something has gone wrong and we cannot take payment at this time, our developers will look into it, please try
       again later.

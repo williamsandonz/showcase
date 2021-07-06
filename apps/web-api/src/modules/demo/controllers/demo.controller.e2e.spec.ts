@@ -6,8 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { assert } from 'console';
 import { getDatabaseConfigForE2E, seedGlobal } from './../../../test';
 import { IApiResponse } from '@monorepo/api-client';
-import { DemoPostResponseDto, IDemoGetResponseDto } from '../dto';
 import { DemoService } from '../providers';
+import { IDemoPostResponseDto } from '@monorepo/web-api-client';
 
 describe('DemoController (e2e)', () => {
   let app: INestApplication;
@@ -27,21 +27,8 @@ describe('DemoController (e2e)', () => {
       .send({ foo: 'bar-post' })
       .expect(201)
       .then((rawResponse: request.Response) => {
-        const response = rawResponse.body as IApiResponse<DemoPostResponseDto>;
+        const response = rawResponse.body as IApiResponse<IDemoPostResponseDto>;
         assert(response.payload.foo, 'bar-post');
-      });
-  });
-  it('/ (GET)', async () => {
-    expect.assertions(1);
-    await service.save({
-      foo: 'bar-get'
-    });
-    return request(app.getHttpServer())
-      .get('/demo/detail/1')
-      .expect(200)
-      .then((rawResponse: request.Response) => {
-        const response = rawResponse.body as IApiResponse<IDemoGetResponseDto>;
-        expect(response.payload.foo).toEqual('bar-get');
       });
   });
   afterEach(async () => {

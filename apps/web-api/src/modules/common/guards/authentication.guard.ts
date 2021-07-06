@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, Inject, UnauthorizedException } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException, HttpException } from '@nestjs/common';
 import { CognitoService, CognitoClaims } from './../providers';
 import { Reflector } from '@nestjs/core';
 import { DecoratorKeys } from '../decorators';
@@ -19,6 +19,8 @@ export class AuthenticationGuard implements CanActivate {
       }
       const bearerToken = request.get('Authorization');
       if (!bearerToken) {
+        // User has attempted to access a protected endpoint without credentials
+        // Not a viable path unless user is malicious
         return resolve(false);
       }
       this.cognitoService
@@ -30,9 +32,14 @@ export class AuthenticationGuard implements CanActivate {
           return resolve(true);
         })
         .catch((e) => {
-          return resolve(false);
+          // Token exists but not valid, most likely scenario is it has expired.
+          this.deny();
         });
     });
+  }
+
+  deny() {
+    throw new HttpException('', 498);
   }
 
 }

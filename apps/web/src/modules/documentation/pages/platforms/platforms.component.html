@@ -1,0 +1,15 @@
+
+<app-heading-panel title="Documentation" class="has-tabs"> </app-heading-panel>
+<div class="focal-column">
+  <h5>We support the following platforms:</h5>
+  <ul class="grid-center">
+    <li class="col auto-width" *ngFor="let platform of platforms">
+      <a [routerLink]="platform.path" class="box-link">
+        <img [src]="platform.imagePath" />
+        <span>{{ platform.name }}</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+

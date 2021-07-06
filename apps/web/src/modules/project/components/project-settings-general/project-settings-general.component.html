@@ -1,0 +1,21 @@
+<mat-accordion>
+  <mat-expansion-panel [expanded]="expandedPanelIndex === 0" (opened)="setExpandedPanelIndex(0)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Details
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-edit-project-details (saved)="onDetailsSaved()"></app-edit-project-details>
+  </mat-expansion-panel>
+  <mat-expansion-panel [expanded]="expandedPanelIndex === 2" (opened)="setExpandedPanelIndex(2)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Delete project
+      </mat-panel-title>
+      <mat-panel-description>
+        <mat-icon>delete</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <app-delete-project [project]="project"></app-delete-project>
+  </mat-expansion-panel>
+</mat-accordion>

@@ -1,0 +1,14 @@
+<p>If you wish to delete your account, please type the word "delete" into the text below to confirm.</p>
+<p>Once the deletion has completed you will then be logged out automatically.</p>
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <mat-form-field>
+    <input formControlName="confirmation" matInput placeholder="Type 'delete' in here to confirm" />
+    <mat-error [appFieldErrors]="form.controls.confirmation"></mat-error>
+  </mat-form-field>
+  <mat-error *ngIf="formError">
+    {{ formError }}
+  </mat-error>
+  <app-async-button [processing]="processing">
+    <button mat-flat-button color="primary" type="submit">Save</button>
+  </app-async-button>
+</form>

@@ -1,1 +1,23 @@
 @import './../../../../styles/includes';
+
+.temp {
+  height: 250px;
+  margin: 0 -($gutter);
+}
+.supported {
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  li {
+    padding: 5px;
+  }
+  img {
+    width: 96px;
+    height: 96px;
+    border-radius: $border-radius;
+  }
+}
+
+

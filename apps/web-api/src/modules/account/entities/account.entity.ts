@@ -1,3 +1,4 @@
+import { IAccountVm } from '@monorepo/web-api-client';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
@@ -8,11 +9,14 @@ export class Account {
   })
   cookieUsageEnabled: boolean;
 
-  @PrimaryColumn()
-  id: string;
-
   @Column()
   dateJoined: Date;
+
+  @Column()
+  email: string;
+
+  @PrimaryColumn()
+  id: string;
 
   @Column()
   lastLoggedIn: Date;
@@ -22,5 +26,17 @@ export class Account {
 
   @Column()
   stripeCustomerId: string;
+
+  @Column()
+  timezone: string
+
+  mapToViewModel(): IAccountVm {
+    return {
+      dateJoined: this.dateJoined,
+      email: this.email,
+      id: this.id,
+      name: this.name
+    }
+  }
 
 }

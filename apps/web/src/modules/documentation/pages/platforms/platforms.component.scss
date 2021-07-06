@@ -1,0 +1,15 @@
+@import './../../../../styles/includes';
+
+.focal-column {
+  text-align: center;
+  > h5 {
+    margin-bottom: 40px;
+    font-weight: normal;
+    @include media-breakpoint-up(md) {
+      margin-bottom: 60px;
+    }
+  }
+}
+ul {
+  display: flex;
+}

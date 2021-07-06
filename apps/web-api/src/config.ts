@@ -54,7 +54,7 @@ export const config = {
   },
   system: systemConfig,
   website: {
-    uri: process.env.WEB_API_WITH_WWW,
+    uri: `https://${process.env.WEB_URI_WITH_WWW}`,
   },
 } as IWebHttpApiConfig;
 

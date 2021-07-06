@@ -1,0 +1,36 @@
+<mat-accordion>
+  <mat-expansion-panel [expanded]="expandedPanelIndex === 0" (opened)="setExpandedPanelIndex(0)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Email
+      </mat-panel-title>
+      <mat-panel-description>
+        <span>{{ email }}</span>
+        <mat-icon class="{{ emailVerified ? 'positive' : 'warn' }}">{{ emailVerified ? 'verified' : 'error'}}</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <app-change-email (saved)="onChangeEmailSaved()"></app-change-email>
+  </mat-expansion-panel>
+  <mat-expansion-panel [expanded]="expandedPanelIndex === 1" (opened)="setExpandedPanelIndex(1)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Password
+      </mat-panel-title>
+      <mat-panel-description>
+        <mat-icon>lock</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <app-change-password (saved)="onChangePasswordSaved()"></app-change-password>
+  </mat-expansion-panel>
+  <mat-expansion-panel [expanded]="expandedPanelIndex === 2" (opened)="setExpandedPanelIndex(2)">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Delete account
+      </mat-panel-title>
+      <mat-panel-description>
+        <mat-icon>delete</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <app-delete-account></app-delete-account>
+  </mat-expansion-panel>
+</mat-accordion>

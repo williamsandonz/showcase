@@ -36,7 +36,7 @@ export class PurchaseComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.titleService.setTitle(`${constants.appName} - Purchase`);
+    this.titleService.setTitle(`Purchase`);
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
       card: [''],

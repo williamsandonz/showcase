@@ -1,4 +1,4 @@
-import { IOrganisation } from '@monorepo/web-api-client';
+import { IOrganisationVm } from '@monorepo/web-api-client';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -10,12 +10,23 @@ export class Organisation {
   @Column()
   name: string;
 
-  transformForResponse(): IOrganisation {
+  @Column()
+  slug: string;
+
+  constructor(
+    name: string,
+    slug: string
+  ) {
+    this.name = name;
+    this.slug = slug;
+  }
+
+  mapToViewModel(): IOrganisationVm {
     return {
       id: this.id,
       name: this.name,
+      slug: this.slug
     }
   }
-
 
 }

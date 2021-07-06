@@ -13,24 +13,26 @@ export class FieldErrorsDirective implements DoCheck {
   constructor(public element: ElementRef) {}
 
   ngDoCheck() {
+    this.element.nativeElement.innerHTML = '';
     if (typeof this.formSubmitted !== 'undefined' && !isControlInErrorState(this.control, this.formSubmitted)) {
-      // Because <mat-checkbox> and <mat-radio> can't be placed inside <mat-form-field>
-      // They cannot automatically benefit from ErrorStateMatcher and therefore will
-      // always be visible. So we use this guard to connect it to the logic of our state
-      // matcher.
+      // When this directive is used with <mat-checkbox> or <mat-radio> we can assume that formSubmitted is supplied.
+      // In this scenario, if the control is valid, we manually remove the error message displayed.
+      // This weirdness is necessary because <mat-checkbox> and <mat-radio> can't be placed inside <mat-form-field>
+      // They cannot automatically benefit from ErrorStateMatcher. (Which updates control validity when form submitted)
+      // So this will cause message to always be displayed even before form submitted.
       return;
     }
-    this.element.nativeElement.innerHTML = '';
     const errors = Object.keys(this.control.errors || {});
-    errors.forEach((key, i) => {
+    if (errors.length) {
+      // Only display the first error because mat-form-field only contains enough height for a 1 line message
+      const key = errors[0];
       const value = this.control.errors[key];
       const isServerError = value && !!value.server;
       if (!isServerError && !messageMap[key]) {
         throw new Error(`Validation map does not contain entry for key ${key}`);
       }
-      const conjunction = i !== 0 ? '<br />' : '';
-      this.element.nativeElement.innerHTML += conjunction + (isServerError ? value.message : messageMap[key](value));
-    });
+      this.element.nativeElement.innerHTML = (isServerError ? value.message : messageMap[key](value));
+    }
   }
 }
 

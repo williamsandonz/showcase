@@ -1,0 +1,39 @@
+<mat-error *ngIf="loadingErrorMessage">
+  {{ loadingErrorMessage }}
+</mat-error>
+<div *ngIf="!loadingErrorMessage">
+  <div class="titled-list">
+    <strong>Invitations</strong>
+    <div *ngIf="!loading && invitations.length === 0" class="no-items">
+      No open invitations present in organisation.
+    </div>
+    <ul *ngIf="!loading && invitations.length">
+      <li *ngFor="let invitation of invitations">
+        <ul>
+          <li class="has-actions">
+            {{ invitation.email }}
+            <ul *ngIf="isAdmin">
+              <li>
+                <a class="resend" (click)="resendInvitation(invitation)">
+                  Resend email
+                </a>
+              </li>
+              <li>
+                <a (click)="deleteInvitation(invitation)">
+                  Delete
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li>Expires in {{ invitation.expiresInDays }} days</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <mat-paginator
+    *ngIf="displayPaginator"
+    [length]="totalCount"
+    (page)="onClickedChangePage($event)"
+    [pageSize]="pageSize">
+  </mat-paginator>
+</div>

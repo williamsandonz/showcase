@@ -1,0 +1,8 @@
+<mat-menu color="primary">
+  <button
+    *ngFor="let product of products"
+    mat-menu-item
+    [routerLink]="product.path">
+    {{ product.title }}
+  </button>
+</mat-menu>

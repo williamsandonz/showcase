@@ -1,0 +1,18 @@
+//************************
+//    VARIABLES
+//************************
+$gl-colCount:             12 !default;
+$gl-gridName:             grid !default;
+$gl-colName:              col !default;
+$gl-attributeName:        class !default;
+$gl-gutter:               $gutter !default; // Total left + right
+$gl-gutter-vertical:      $gutter !default;
+$gl-mq-width:             'max-width' !default;
+// gl-mq-list order is import, big BP must preceed smaller ones
+$gl-mq-list: (
+  xl: map-get($grid-breakpoints, xl),
+  lg: map-get($grid-breakpoints, lg),
+  md: map-get($grid-breakpoints, md),
+  sm: map-get($grid-breakpoints, sm),
+  xs: map-get($grid-breakpoints, xs),
+) !default;

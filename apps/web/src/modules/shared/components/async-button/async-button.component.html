@@ -2,3 +2,8 @@
 <div [ngClass]="{ 'inacessible-content': processing }" (click)="onContentClick($event)">
   <ng-content></ng-content>
 </div>
+<p
+  *ngIf="displaySuccessMessage && success"
+  class="state-indicator success">
+  {{ successMessage }}
+</p>

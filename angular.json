@@ -359,6 +359,7 @@
           "options": {
             "browserTarget": "web:build-ng",
             "host": "0.0.0.0",
+            "port": 4201,
             "proxyConfig": "apps/web/proxy.conf.json",
             "ssl": true
           },

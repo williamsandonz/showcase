@@ -1,4 +1,4 @@
-import { IOrganisationMembership } from '@monorepo/web-api-client';
+import { IOrganisationMembershipVm } from '@monorepo/web-api-client';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Account } from '../../account/entities';
 import { OrganisationPermission } from './organisation-permission.entity';
@@ -42,10 +42,11 @@ export class OrganisationMembership {
     this.selected = selected;
   }
 
-  transformForResponse(): IOrganisationMembership {
+  mapToViewModel(): IOrganisationMembershipVm {
     return {
-      organisation: this.organisation.transformForResponse(),
-      permissions: this.permissions.map(permission => permission.transformForResponse()),
+      account: this.account instanceof Account ? this.account.mapToViewModel() : null,
+      organisation: this.organisation.mapToViewModel(),
+      permissions: this.permissions.map(permission => permission.mapToViewModel()),
       selected: this.selected
     };
   }

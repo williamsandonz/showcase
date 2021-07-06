@@ -4,7 +4,8 @@ import { ErrorFormatFilter } from './filters';
 import { AuthenticationGuard } from './guards';
 import { ResponseInterceptor } from './interceptors';
 import { ValidationResponseFormatterPipe } from './pipes';
-import { CognitoService, MailerService } from './providers';
+import { CognitoService, DatabaseService, MailerService } from './providers';
+import { UtilityService } from './providers/';
 
 @Global()
 @Module({
@@ -30,9 +31,11 @@ import { CognitoService, MailerService } from './providers';
       useClass: ValidationResponseFormatterPipe,
     },
     CognitoService,
+    DatabaseService,
     MailerService,
+    UtilityService
   ],
   imports: [],
-  exports: [CognitoService, MailerService],
+  exports: [CognitoService, DatabaseService, MailerService, UtilityService],
 })
 export class CommonModule {}

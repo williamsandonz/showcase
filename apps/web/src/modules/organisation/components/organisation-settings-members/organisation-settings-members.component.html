@@ -1,0 +1,13 @@
+<div class="cta" (click)="openInviteMemberDialog($event)">
+  <mat-icon>mail_outline</mat-icon>
+  <strong>Invite new members by email to join your organisation</strong>
+  <mat-icon>chevron_right</mat-icon>
+</div>
+<mat-tab-group mat-align-tabs="start">
+  <mat-tab label="Members" >
+    <app-organisation-members></app-organisation-members>
+  </mat-tab>
+  <mat-tab label="Invites" >
+    <app-organisation-invitations #invitationsComponent></app-organisation-invitations>
+  </mat-tab>
+</mat-tab-group>

@@ -1,0 +1,52 @@
+@import './../../../../styles/includes';
+
+:host {
+  padding: 30px $gutter $gutter;
+  margin-top: 50px;
+  border-top: 1px solid $gray;
+  display: flex;
+  flex-direction: column;
+  background: $green-dark;
+  color: white;
+}
+.links {
+  strong {
+    margin-bottom: 10px;
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  li {
+    margin-top: 4px;
+    display: block;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  a {
+    font-size: 14px;
+    color: $gray;
+    text-decoration: none;
+  }
+}
+.meta {
+  margin: 20px 0 0;
+  display: flex;
+  .logo-muted {
+    width: 115px;
+    height: 22px;
+    display: block;
+    background: url(https://via.placeholder.com/126x24);
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.7;
+    &:hover {
+      opacity: 1;
+    }
+  }
+  small {
+    margin: 0 0 0 auto;
+    font-size: 12px;
+    color: $gray;
+  }
+}

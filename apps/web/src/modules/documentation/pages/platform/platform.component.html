@@ -1,0 +1,11 @@
+<app-heading-panel
+  backButtonText="Other platforms"
+  backButtonUri="/docs/platforms"
+  [title]="headingPanelTitle">
+</app-heading-panel>
+<div class="platform-column mat-body-1">
+  <div>
+    <router-outlet></router-outlet>
+  </div>
+  <app-platform-navigation></app-platform-navigation>
+</div>

@@ -7,13 +7,23 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { FieldErrorsDirective } from './directives/field-errors.directive';
 import { InvalidOnSubmitErrorStateMatcher } from './';
+import { NgxCaptchaModule } from 'ngx-captcha';
 
-const exportedModules = [MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule];
+const exports = [
+  MatButtonModule,
+  MatCheckboxModule,
+  MatFormFieldModule,
+  MatInputModule,
+  NgxCaptchaModule,
+  ReactiveFormsModule,
+];
 
 @NgModule({
   declarations: [FieldErrorsDirective],
-  imports: [...exportedModules],
-  exports: [...exportedModules, FieldErrorsDirective],
+  imports: [
+    ...exports,
+  ],
+  exports: [...exports, FieldErrorsDirective],
   providers: [
     {
       provide: ErrorStateMatcher,

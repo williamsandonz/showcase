@@ -3,7 +3,11 @@ import { ReplaySubject } from 'rxjs';
 
 @Injectable()
 export class StorageService {
-  items = [new StorageItem(StorageKey.COOKIE_PERMISSION_STATE, false)];
+
+  items = [
+    new StorageItem(StorageKey.COOKIE_PERMISSION_STATE, false),
+    new StorageItem(StorageKey.INVITE, true)
+  ];
 
   constructor() {}
 
@@ -46,4 +50,5 @@ export class StorageItem {
 
 export enum StorageKey {
   COOKIE_PERMISSION_STATE = 'COOKIE_PERMISSION_STATE',
+  INVITE = 'INVITE'
 }

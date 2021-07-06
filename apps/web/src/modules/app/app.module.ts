@@ -11,6 +11,7 @@ import { AppErrorHandler, ApiHttpInterceptor } from './providers';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { GuestModule } from '../guest/guest.module';
+import { HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 
 const analyticsModules = environment.analyticsTrackingCode ?
   [
@@ -45,6 +46,18 @@ const analyticsModules = environment.analyticsTrackingCode ?
       useClass: ApiHttpInterceptor,
       multi: true,
     },
+    {
+      // Should be provided in Documentation module but plugin does not support
+      // https://github.com/MurhafSousli/ngx-highlightjs/issues/137
+      provide: HIGHLIGHT_OPTIONS,
+      useValue: {
+        coreLibraryLoader: () => import('highlight.js/lib/core'),
+        lineNumbersLoader: () => import('highlightjs-line-numbers.js'), // Optional, only if you want the line numbers
+        languages: {
+          typescript: () => import('highlight.js/lib/languages/typescript'),
+        }
+      }
+    }
   ],
   bootstrap: [RootComponent],
 })

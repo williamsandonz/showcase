@@ -26,13 +26,15 @@ export class ValidationResponseFormatterPipe implements PipeTransform<any> {
   }
 
   private mapValidationError(error: ValidationError) {
-    const response = {
+    const response: any = {
       property: error.property,
       constraints: error.constraints,
-      children: error.children.map((childError: ValidationError) => {
-        return this.mapValidationError(childError);
-      }),
     };
+    if (error.children) {
+      response.children = error.children.map((childError: ValidationError) => {
+        return this.mapValidationError(childError);
+      });
+    }
     return response;
   }
 }

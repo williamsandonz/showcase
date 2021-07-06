@@ -1,0 +1,26 @@
+<form *ngIf="form" (ngSubmit)="onSubmit()" [formGroup]="form">
+  <mat-form-field>
+    <input formControlName="name" matInput maxLength="30" placeholder="Name" required />
+    <mat-error [appFieldErrors]="form.controls.name"></mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Timezone</mat-label>
+    <mat-select formControlName="timezone">
+      <mat-option *ngFor="let timezone of timezoneOptions" [value]="timezone">{{ timezone }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-error *ngIf="formError">
+    {{ formError }}
+  </mat-error>
+  <app-async-button
+    [processing]="processing"
+    [success]="success">
+    <button
+      color="primary"
+      [disabled]="success"
+      mat-flat-button
+      type="submit">
+      Save
+    </button>
+  </app-async-button>
+</form>

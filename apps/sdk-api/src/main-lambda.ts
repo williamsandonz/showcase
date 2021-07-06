@@ -54,7 +54,7 @@ export const handler = async (event, context) => {
   console.log(event);
   console.log(context);
 
-  if (routeKey === "$connect") {
+  if (routeKey === '$connect') {
     console.log('CONNECT!');
     // handle new connection
     return {
@@ -62,7 +62,7 @@ export const handler = async (event, context) => {
     }
   }
 
-  if (routeKey === "$disconnect") {
+  if (routeKey === '$disconnect') {
     console.log('DISCONNECT!');
     // handle disconnection
     return {

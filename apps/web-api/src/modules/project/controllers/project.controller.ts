@@ -1,8 +1,9 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Delete, Param, Query } from '@nestjs/common';
 import { ProjectService } from './../providers';
 import { CognitoClaims } from '../../common/decorators';
-import { IProject } from '@monorepo/web-api-client';
+import { IProjectMembershipVm } from '@monorepo/web-api-client';
 import { CreateProjectDto } from '../dto';
+import { ProjectEditDetailsRequestDto } from '../dto/edit-details.dto';
 
 @Controller('project')
 export class ProjectController {
@@ -12,8 +13,21 @@ export class ProjectController {
   async onCreate(
     @CognitoClaims() cognitoClaims,
     @Body() dto: CreateProjectDto
-  ): Promise<IProject> {
+  ): Promise<IProjectMembershipVm> {
     return this.service.create(cognitoClaims.sub, dto);
+  }
+
+  @Delete()
+  async onDelete(@Query('id') id: string): Promise<any> {
+    return this.service.delete(parseInt(id, 10));
+  }
+
+  @Post('edit-details')
+  async onEditDetails(
+    @CognitoClaims() cognitoClaims,
+    @Body() dto: ProjectEditDetailsRequestDto
+  ): Promise<void> {
+    return this.service.editDetails(cognitoClaims.sub, dto);
   }
 
 }

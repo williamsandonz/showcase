@@ -1,0 +1,24 @@
+<mat-error *ngIf="loadingErrorMessage">
+  {{ loadingErrorMessage }}
+</mat-error>
+<div *ngIf="!loadingErrorMessage">
+  <div class="titled-list">
+    <strong>Members</strong>
+    <div *ngIf="!loading && members.length === 0" class="no-items">
+      No other members present in organisation.
+    </div>
+    <ul *ngIf="!loading && members.length" >
+      <li *ngFor="let member of members">
+        <span>{{ member.account.name }}</span>
+        <span class="email">{{ member.account.email }}</span>
+        <span>{{ getRole(member) }}</span>
+      </li>
+    </ul>
+  </div>
+  <mat-paginator
+    *ngIf="displayPaginator"
+    [length]="totalCount"
+    (page)="onClickedChangePage($event)"
+    [pageSize]="pageSize">
+  </mat-paginator>
+</div>

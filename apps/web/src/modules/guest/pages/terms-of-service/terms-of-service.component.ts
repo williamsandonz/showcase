@@ -11,6 +11,6 @@ export class TermsOfServiceComponent implements OnInit {
   constructor(public titleService: Title) {}
 
   ngOnInit() {
-    this.titleService.setTitle(`${constants.appName} - Terms of service`);
+    this.titleService.setTitle(`Terms of service`);
   }
 }

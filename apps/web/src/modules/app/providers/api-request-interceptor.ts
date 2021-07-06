@@ -6,12 +6,13 @@ import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { CognitoService } from './../../shared/providers';
 import { CognitoUser } from '@aws-amplify/auth';
+import { RoutingService } from '../../shared/providers/routing.service';
 
 @Injectable()
 export class ApiHttpInterceptor implements HttpInterceptor {
   authenticatedUser: CognitoUser;
 
-  constructor(public cognitoService: CognitoService, public router: Router) {
+  constructor(public cognitoService: CognitoService, public router: Router, private routingService: RoutingService) {
     this.cognitoService.authenticatedUser$.subscribe((user) => (this.authenticatedUser = user));
   }
 
@@ -42,9 +43,9 @@ export class ApiHttpInterceptor implements HttpInterceptor {
           return event;
         }),
         catchError((error: HttpErrorResponse) => {
-          if (error.status === 403) {
+          if (error.status === 498) {
             this.cognitoService.refreshSession().then(() => {
-              this.router.navigate(['/members/projects']);
+              this.routingService.goToOrganisationPage('projects');
             });
           }
           return throwError(error);

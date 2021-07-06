@@ -1,5 +1,5 @@
-import { IProjectMembership } from '@monorepo/web-api-client';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { IProjectMembershipVm } from '@monorepo/web-api-client';
+import { Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Account } from '../../account/entities';
 import { ProjectPermission } from './project-permission.entity';
 import { Project } from './project.entity';
@@ -25,28 +25,25 @@ export class ProjectMembership {
   @JoinTable()
   permissions: ProjectPermission[];
 
-  @Column({
-    default: false
-  })
-  selected: boolean;
-
   constructor(
-    account: Account,
-    project: Project,
+    accountId: string,
     permissions: ProjectPermission[],
-    selected = false
+    project: Project,
   ) {
-    this.account = account;
-    this.project = project;
+    if(accountId) {
+      this.account = {
+        id: accountId
+      } as any;
+    }
     this.permissions = permissions;
-    this.selected = selected;
+    this.project = project;
   }
 
-  transformForResponse(): IProjectMembership {
+  mapToViewModel(): IProjectMembershipVm {
     return {
-      project: this.project.transformForResponse(),
-      permissions: this.permissions.map(permission => permission.transformForResponse()),
-      selected: this.selected
+      account: this.account instanceof Account ? this.account.mapToViewModel() : null,
+      project: this.project.mapToViewModel(),
+      permissions: this.permissions.map(permission => permission.mapToViewModel()),
     };
   }
 

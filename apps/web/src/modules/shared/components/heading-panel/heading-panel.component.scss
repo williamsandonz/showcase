@@ -2,7 +2,7 @@
 
 :host {
   padding: 40px 0 38px;
-  margin: 0 (-$gutter) 40px;
+  margin: 0 (-$gutter) $heading-panel-margin-bottom;
   border-bottom: 1px solid $gray;
   display: flex;
   justify-content: center;
@@ -15,5 +15,23 @@
   }
   h1 {
     margin-bottom: 0;
+  }
+  &.has-sub-heading,
+  &.has-back-button {
+    display: flex;
+    flex-direction: column;
+  }
+  h6,
+  .mat-h6 {
+    margin-top: 15px;
+    color: #aaa; // TODO
+  }
+  > div {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    mat-icon {
+      color: $blue;
+    }
   }
 }

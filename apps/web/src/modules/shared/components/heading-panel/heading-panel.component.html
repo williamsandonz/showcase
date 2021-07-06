@@ -1,1 +1,6 @@
 <h1>{{ title }}</h1>
+<h6 *ngIf="subHeading">{{ subHeading }}</h6>
+<div *ngIf="backButtonUri">
+  <mat-icon>chevron_left</mat-icon>
+  <a (click)="onBackButtonClicked()">{{ backButtonText }}</a>
+</div>

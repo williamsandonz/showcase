@@ -1,4 +1,4 @@
-import { IProject } from '@monorepo/web-api-client';
+import { IProjectVm } from '@monorepo/web-api-client';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Organisation } from '../../organisation/entities';
 
@@ -6,22 +6,28 @@ import { Organisation } from '../../organisation/entities';
 export class Project {
 
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column()
   name: string;
 
-  @ManyToOne(() => Organisation, { nullable: false })
+  @Column()
+  slug: string;
+
+  @ManyToOne(() => Organisation, { nullable: false, eager: true })
   organisation: Organisation;
 
-  constructor(name: string, organisation: Organisation) {
+  constructor(name: string, slug: string, organisation: Organisation) {
     this.name = name;
+    this.slug = slug;
     this.organisation = organisation;
   }
 
-  transformForResponse(): IProject {
+  mapToViewModel(): IProjectVm {
     return {
-      name: this.name
+      id: this.id,
+      name: this.name,
+      slug: this.slug
     }
   }
 

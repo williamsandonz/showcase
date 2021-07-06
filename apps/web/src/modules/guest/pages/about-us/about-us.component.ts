@@ -11,6 +11,6 @@ export class AboutUsComponent implements OnInit {
   constructor(public titleService: Title) {}
 
   ngOnInit() {
-    this.titleService.setTitle(`${constants.appName} - Privacy policy`);
+    this.titleService.setTitle(`Privacy policy`);
   }
 }

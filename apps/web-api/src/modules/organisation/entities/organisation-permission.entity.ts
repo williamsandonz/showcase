@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { IOrganisationPermission, OrganisationPermissionType } from '@monorepo/web-api-client';
+import { IOrganisationPermissionVm, OrganisationPermissionType } from '@monorepo/web-api-client';
 
 @Entity()
 export class OrganisationPermission {
@@ -19,7 +19,7 @@ export class OrganisationPermission {
   })
   type: OrganisationPermissionType;
 
-  transformForResponse(): IOrganisationPermission {
+  mapToViewModel(): IOrganisationPermissionVm {
     return {
       description: this.description,
       id: this.id,

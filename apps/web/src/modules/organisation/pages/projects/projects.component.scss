@@ -1,0 +1,20 @@
+@import './../../../../styles/includes';
+
+.focal-column {
+  > button {
+    margin: 0 auto 40px;
+    display: block;
+  }
+}
+mat-card {
+  cursor: pointer;
+}
+mat-card-header {
+  margin-left: -16px;
+  a {
+    margin-left: auto;
+  }
+}
+.no-projects {
+  text-align: center;
+}

@@ -1,0 +1,29 @@
+<app-heading-panel
+  [subHeading]="organisationName"
+  title="Projects">
+</app-heading-panel>
+<div class="focal-column">
+  <button
+    *ngIf="isOrganisationAdmin"
+    (click)="onCreateNewProjectClicked()"
+    color="primary"
+    mat-flat-button>
+    Create new PROJECT
+  </button>
+  <p *ngIf="projects && !projects.length" class="no-projects">
+    Organisation currently has no projects
+  </p>
+  <div class="grid-3_md-2_sm-1" *ngIf="projects && projects.length">
+    <div class="col" *ngFor="let project of projects">
+      <mat-card (click)="goToProjectPage(project, 'dashboard')">
+        <mat-card-header>
+          <mat-card-title><h5>{{ project.name }}</h5></mat-card-title>
+          <mat-card-subtitle>SUBTITLE TODO</mat-card-subtitle>
+          <a (click)="goToProjectPage(project, 'settings/general', $event)">
+            <mat-icon>settings</mat-icon>
+          </a>
+        </mat-card-header>
+      </mat-card>
+    </div>
+  </div>
+</div>

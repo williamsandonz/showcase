@@ -6,7 +6,7 @@ import { FooterComponent } from '../footer/footer.component';
 import { UiModule } from './../../../../modules/ui/ui.module';
 import { CookieDisclaimerComponent } from '../cookie-disclaimer/cookie-disclaimer.component';
 import { SharedModule } from './../../../../modules/shared/shared.module';
-import { AccountService, CognitoService, StorageService, UtilityService } from './../../../../modules/shared/providers';
+import { UserService, CognitoService, StorageService, UtilityService } from './../../../../modules/shared/providers';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormModule } from './../../../../modules/form/form.module';
 import { Title } from '@angular/platform-browser';
@@ -26,7 +26,7 @@ describe('RootComponent', () => {
             useClass: ApiHttpInterceptor,
             multi: true,
           },
-          AccountService,
+          UserService,
           CognitoService,
           StorageService,
           Title,

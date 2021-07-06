@@ -1,0 +1,22 @@
+@import './../../../../styles/includes';
+
+:host {
+  display: block;
+}
+
+li {
+  display: flex;
+  span:last-child {
+    margin-left: auto;
+    @include media-breakpoint-up(md) {
+      margin-left: 0;
+    }
+  }
+}
+.email {
+  display: none;
+  @include media-breakpoint-up(md) {
+    display: inline;
+    margin: 0 auto;
+  }
+}

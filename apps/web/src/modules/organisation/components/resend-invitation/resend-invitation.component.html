@@ -1,0 +1,13 @@
+<h3 mat-dialog-title>Resend invitation</h3>
+<div mat-dialog-content>
+  <div>
+    <p>Do you want to resend an invitation to {{ data.invitation.email }}</p>
+  </div>
+  <mat-error *ngIf="requestError">{{ requestError }}</mat-error>
+</div>
+<div mat-dialog-actions>
+  <app-async-button [processing]="processing">
+    <button mat-flat-button color="primary" (click)="onConfirm()">Resend</button>
+  </app-async-button>
+  <button mat-stroked-button color="warn" (click)="closeDialog()">Cancel</button>
+</div>

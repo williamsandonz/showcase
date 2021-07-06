@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { config } from './../../../config';
 import Stripe from 'stripe';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class StripeService {

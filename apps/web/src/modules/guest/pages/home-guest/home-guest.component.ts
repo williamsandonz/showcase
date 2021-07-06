@@ -9,9 +9,12 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./home-guest.component.scss'],
 })
 export class HomeGuestComponent implements OnInit {
+
+  appName = constants.appName;
   constructor(public titleService: Title, public httpClient: HttpClient) {}
 
   ngOnInit() {
-    this.titleService.setTitle(`${constants.appName} - Welcome`);
+    this.titleService.setTitle(`Welcome`);
   }
+
 }

@@ -5,13 +5,12 @@ import { HomeGuestCanActivateGuard } from './providers/home-guest-can-activate.g
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { TermsOfServiceComponent } from './pages/terms-of-service/terms-of-service.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
-import { SupportComponent } from './pages/support/support.component';
 import { LoginComponent } from './pages/login/login.component';
 import { AboutUsComponent } from './pages/about-us/about-us.component';
 import { OAuthLoginCallbackComponent } from './pages/oauth-login-callback/oauth-login-callback.component';
 import { PricingComponent } from './pages/pricing/pricing.component';
-import { DocumentationComponent } from './pages/documentation/documentation.component';
-import { ProductComponent } from './pages/product/product.component';
+import { ContactUsComponent } from './pages/contact-us/contact-us.component';
+import { AcceptInvitationComponent } from './pages/accept-invitation/accept-invitation.component';
 
 const routes: Routes = [
   {
@@ -24,8 +23,12 @@ const routes: Routes = [
     component: AboutUsComponent,
   },
   {
-    path: 'documentation',
-    component: DocumentationComponent,
+    path: 'accept-invitation',
+    component: AcceptInvitationComponent,
+  },
+  {
+    path: 'contact',
+    component: ContactUsComponent,
   },
   {
     path: 'login',
@@ -40,20 +43,12 @@ const routes: Routes = [
     component: PricingComponent,
   },
   {
-    path: 'product',
-    component: ProductComponent,
-  },
-  {
     path: 'privacy-policy',
     component: PrivacyPolicyComponent,
   },
   {
     path: 'sign-up',
     component: SignUpComponent,
-  },
-  {
-    path: 'support',
-    component: SupportComponent,
   },
   {
     path: 'terms-of-service',

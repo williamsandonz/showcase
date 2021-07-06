@@ -1,10 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, TestingModule} from '@nestjs/testing';
 import { DemoController } from './../controllers/demo.controller';
 import { DemoService } from './demo.service';
-import { Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { Demo } from './../entities/demo.entity';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { MailerService } from '../../common/providers';
+import { getRepositoryToken, getConnectionToken } from '@nestjs/typeorm';
+import { DatabaseService, MailerService } from '../../common/providers';
 
 describe('DemoController', () => {
 
@@ -15,11 +15,16 @@ describe('DemoController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [DemoController],
       providers: [
+        DatabaseService,
         DemoService,
         MailerService,
         {
           provide: getRepositoryToken(Demo),
           useClass: Repository,
+        },
+        {
+          provide: getConnectionToken(),
+          useClass: Connection,
         },
       ],
     }).compile();
@@ -37,3 +42,4 @@ describe('DemoController', () => {
   });
 
 });
+

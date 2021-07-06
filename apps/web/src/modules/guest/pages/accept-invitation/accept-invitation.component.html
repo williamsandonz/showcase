@@ -1,0 +1,45 @@
+<mat-error *ngIf="loadingError">
+  {{ loadingError }}
+</mat-error>
+<form *ngIf="invitation" (ngSubmit)="onSubmit()" [formGroup]="form">
+  <mat-card class="form-card full-page-card">
+    <mat-card-header>
+      <mat-card-title><h3>Accept Invitation</h3></mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        You have been invited by {{ invitation.inviter.name }} to join the {{ invitation.organisation.name }} organisation, please
+        complete the form below to sign up.
+      </p>
+      <mat-form-field>
+        <input formControlName="name" matInput maxLength="30" placeholder="Name" />
+        <mat-error [appFieldErrors]="form.controls.name"></mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input formControlName="password1" matInput placeholder="Password" type="password" />
+        <mat-error [appFieldErrors]="form.controls.password1"></mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input formControlName="password2" matInput placeholder="Re-enter password" type="password" />
+        <mat-error [appFieldErrors]="form.controls.password2"></mat-error>
+      </mat-form-field>
+      <div class="vertical-checkboxes pseudo-mat-form-field">
+        <mat-checkbox formControlName="termsAccepted" class="text-wrap">
+          I accept the
+          <a routerLink="/terms-of-service">Terms of service</a> and the
+        <a routerLink="/privacy-policy">Privacy policy</a>.
+        </mat-checkbox>
+        <mat-error [appFieldErrors]="form.controls.termsAccepted" [formSubmitted]="submitted"> </mat-error>
+      </div>
+      <mat-error *ngIf="formError">
+        {{ formError }}
+      </mat-error>
+    </mat-card-content>
+    <mat-card-actions class="adjacent">
+      <app-async-button [processing]="processing">
+        <button mat-flat-button color="primary" type="submit">Save</button>
+      </app-async-button>
+      <app-google-login mat-button></app-google-login>
+    </mat-card-actions>
+  </mat-card>
+</form>

@@ -6,11 +6,17 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./async-button.component.scss'],
 })
 export class AsyncButtonComponent implements OnInit {
+
+  displaySuccessMessage: boolean;
   @Input() processing;
+  @Input() success: boolean;
+  @Input() successMessage = 'Your changes have been saved succesfully';
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.displaySuccessMessage = this.success !== undefined && this.success !== null;
+  }
 
   onContentClick(event: MouseEvent) {
     if (this.processing) {

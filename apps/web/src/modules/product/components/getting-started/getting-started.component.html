@@ -1,0 +1,28 @@
+<div *ngIf="activeProduct">
+  <h2>Getting started is simple</h2>
+  <ul *ngIf="activeProduct.pathways.length > 1" class="pathways grid-center">
+    <li *ngFor="let pathway of activeProduct.pathways" class="col auto-width">
+      <a class="box-link" [ngClass]="{ 'active': pathway === selectedPathway }" (click)="onClickPathway(pathway)">
+        <img [src]="pathway.iconPath" />
+        <span>{{ pathway.name }}</span>
+      </a>
+    </li>
+  </ul>
+  <ul>
+    <li *ngFor="let step of selectedPathway.steps">
+      <div [innerHTML]="step.preamble"></div>
+      <app-code
+        [code]="step.code">
+      </app-code>
+    </li>
+  </ul>
+  <p *ngIf="selectedPathway.conclusion" [innerHTML]="selectedPathway.conclusion"></p>
+  <p *ngIf="!selectedPathway.conclusion">
+    That’s it. There’s no step three. Don’t believe us? Check out our <a [routerLink]="'/docs/platform/'+selectedPathway.docsPath">Documentation</a>
+  </p>
+  <button mat-flat-button [matMenuTriggerFor]="productsMenu.menu" color="primary">
+    <span>See other platforms</span>
+    <mat-icon>expand_more</mat-icon>
+  </button>
+  <app-product-menu #productsMenu [exclude]="activeProduct.uriPath"></app-product-menu>
+</div>

@@ -1,8 +1,8 @@
 import { Component, OnInit, HostBinding, OnDestroy } from '@angular/core';
-import { IAccountSummary } from '@monorepo/web-api-client';
+import { IUserSummaryVm } from '@monorepo/web-api-client';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
-import { AccountService, CognitoService, StorageKey, StorageService } from '../../../shared/providers';
+import { UserService, CognitoService, StorageKey, StorageService } from '../../../shared/providers';
 
 @Component({
   selector: 'app-cookie-disclaimer',
@@ -10,19 +10,19 @@ import { AccountService, CognitoService, StorageKey, StorageService } from '../.
   styleUrls: ['./cookie-disclaimer.component.scss'],
 })
 export class CookieDisclaimerComponent implements OnInit, OnDestroy {
-  accountSummary: IAccountSummary;
+  accountSummary: IUserSummaryVm;
   @HostBinding('class.displayed') display: boolean;
   loggedIn = false;
   subscription1: Subscription;
 
   constructor(
-    public accountService: AccountService,
+    public userService: UserService,
     public cognitoService: CognitoService,
     public storageService: StorageService
   ) {}
 
   ngOnInit() {
-    this.subscription1 = this.accountService.summary$.subscribe((summary: IAccountSummary) => {
+    this.subscription1 = this.userService.summary$.subscribe((summary: IUserSummaryVm) => {
       if (summary.cookieUsageEnabled !== null && this.display) {
         this.display = false;
       }
@@ -45,7 +45,7 @@ export class CookieDisclaimerComponent implements OnInit, OnDestroy {
     } as CookiePermissionState);
     this.display = false;
     if (!!this.cognitoService.authenticatedUser) {
-      await this.accountService.toggleCookieUsageEnabled(accepted);
+      await this.userService.toggleCookieUsageEnabled(accepted);
     }
   }
 }

@@ -1,0 +1,21 @@
+<div *ngIf="activeProduct">
+  <div class="hero-panel">
+    <div class="focal-column">
+      <div class="text">
+        <h1>{{ activeProduct.heroPanelTitle }}</h1>
+        <p>{{ activeProduct.heroPanelDescription }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<app-getting-started></app-getting-started>
+<router-outlet></router-outlet>
+<div class="focal-column">
+  <app-faqs></app-faqs>
+</div>
+<div class="cta-panel">
+  <div class="focal-column">
+    <h3>A better experience for your users. An easier life for your developers.</h3>
+    <button mat-flat-button color="primary">Try {{ appName }} for free</button>
+  </div>
+</div>

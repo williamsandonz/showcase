@@ -1,0 +1,28 @@
+<p *ngIf="emailVerified" class="state-indicator success">
+  <mat-icon>verified</mat-icon>
+  <span>Your email is verified</span>
+</p>
+<p *ngIf="!emailVerified" class="state-indicator warning">
+  <mat-icon>error</mat-icon>
+  <span> Unverified - <a (click)="resendVerificationCode()">click here</a> to resend verification code. </span>
+</p>
+<form *ngIf="form" (ngSubmit)="onSubmit()" [formGroup]="form">
+  <mat-form-field>
+    <input formControlName="email" matInput placeholder="Email" required />
+    <mat-error [appFieldErrors]="form.controls.email"></mat-error>
+  </mat-form-field>
+  <mat-error *ngIf="formError">
+    {{ formError }}
+  </mat-error>
+  <app-async-button
+    [processing]="processing"
+    [success]="success">
+    <button
+      color="primary"
+      [disabled]="success"
+      mat-flat-button
+      type="submit">
+      Save
+    </button>
+  </app-async-button>
+</form>

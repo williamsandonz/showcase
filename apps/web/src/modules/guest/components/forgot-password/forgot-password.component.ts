@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CognitoService } from '../../../shared/providers';
+import { httpRequestFailureMessage } from '../../../shared/common';
 
 @Component({
   selector: 'app-forgot-password',
@@ -23,7 +24,7 @@ export class ForgotPasswordComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.minLength(3)]],
     });
   }
 
@@ -43,8 +44,8 @@ export class ForgotPasswordComponent implements OnInit {
       this.form.get('email').setErrors({
         remote:
           e.code === 'ResourceNotFoundException'
-            ? "Can't find a user matching this email address."
-            : 'Oops! Something has gone wrong',
+            ? 'Can\'t find a user matching this email address.'
+            : httpRequestFailureMessage
       });
     } finally {
       this.processing = false;

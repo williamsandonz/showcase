@@ -1,0 +1,13 @@
+<app-heading-panel [title]="organisationName" class="has-tabs"> </app-heading-panel>
+<nav mat-tab-nav-bar class="heading-panel-tabs">
+  <a
+    mat-tab-link
+    *ngFor="let page of pages"
+    (click)="changePage(page)"
+    [active]="activePagePath == page.path">
+    {{ page.title }}
+  </a>
+</nav>
+<div class="focal-column">
+  <router-outlet></router-outlet>
+</div>

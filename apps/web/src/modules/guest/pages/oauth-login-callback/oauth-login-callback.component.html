@@ -5,7 +5,7 @@
   <form *ngIf="form" (ngSubmit)="onSubmit()" [formGroup]="form">
     <mat-card class="form-card">
       <mat-card-header>
-        <mat-card-title class="mat-h2">Sign up</mat-card-title>
+        <mat-card-title><h3>Sign up</h3></mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <mat-form-field>
@@ -16,6 +16,9 @@
           <input formControlName="organisation" matInput maxLength="50" placeholder="Organisation name" required />
           <mat-error [appFieldErrors]="form.controls.organisation"></mat-error>
         </mat-form-field>
+        <mat-error *ngIf="formError">
+          {{ formError }}
+        </mat-error>
       </mat-card-content>
       <mat-card-actions>
         <app-async-button [processing]="processing">

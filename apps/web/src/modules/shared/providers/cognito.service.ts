@@ -7,14 +7,12 @@ import { Router } from '@angular/router';
 import { ReplaySubject } from 'rxjs';
 import { SignOutOpts } from '@aws-amplify/auth/lib-esm/types';
 import { HubCapsule } from '@aws-amplify/core';
-import { Validators } from '@angular/forms';
 import { regexValidator } from '../../form';
 import { Environments } from '@monorepo/common';
-import { AccountService } from './account.service';
+import { UserService } from './user.service';
 const { promisify } = require('es6-promisify');
 
-export const cognitoPasswordValidators = [
-  Validators.required,
+export const cognitoPasswordValidator = [
   // https://stackoverflow.com/questions/58767980/aws-cognito-password-regex-specific-to-aws-cognito
   regexValidator(/^\S{6,99}$/, 'Must contain no spaces and be at least 6 character long.'),
 ];
@@ -26,7 +24,7 @@ export class CognitoService {
   public authenticatedUser: CognitoUser;
   authenticatedUser$ = new ReplaySubject<CognitoUser>(1);
 
-  constructor(public accountService: AccountService, public router: Router) {}
+  constructor(public userService: UserService, public router: Router) {}
 
   async onAppInit(): Promise<void> {
     this.authenticatedUser$.subscribe((user) => (this.authenticatedUser = user));
@@ -82,7 +80,7 @@ export class CognitoService {
         console.log(cognitoUser.getSignInUserSession().getAccessToken().getJwtToken());
       }
       if (!this.authenticatedHookDisabled) {
-        await this.accountService.onAuthenticated();
+        await this.userService.onAuthenticated();
       }
     }
   }
@@ -167,18 +165,40 @@ export class CognitoService {
 
   async signUp(email, password): Promise<CognitoUser> {
     return new Promise(async (resolve, reject) => {
-      try {
-        const { user } = await Auth.signUp({
-          username: email,
-          password,
-          attributes: {
-            email,
-          },
+      // Defer loading account summary until user exists in our DB
+      this.authenticatedHookDisabled = true;
+      // It's counter-intutive to try signIn first but becuase it's possible for Cognito sign up to succeed
+      // and the internal API call to fail afterwards,
+      // subsequent attempts will hit a dead end because Cognito sign up will result in a user already exists exception.
+      this.signIn(email, password)
+        .then((user: CognitoUser) => {
+          // User already exists in Cognito
+          resolve(user);
+        })
+        .catch(async (e) => {
+          if (e.code === 'NotAuthorizedException') {
+            // User already exists in Cognito but password was wrong
+            return reject(e);
+          } else if (e.code === 'UserNotFoundException') {
+            // User doesn't exist in Cognito yet so create it.
+            try {
+              await Auth.signUp({
+                username: email,
+                password,
+                attributes: {
+                  email,
+                },
+              });
+              // Return null becuase caller will still need to call .signIn afterwards
+              // because Auth.signUp does not init a session.
+              resolve(null);
+            } catch(e) {
+              reject(e);
+            }
+          } else {
+            throw new Error('Unhandled condition in signUp for error ' + e);
+          }
         });
-        resolve(user);
-      } catch (error) {
-        reject(error);
-      }
     });
   }
 

@@ -1,0 +1,25 @@
+<div class="links" *ngIf="loaded">
+  <strong>Help</strong>
+  <ul>
+    <li *ngIf="!authenticatedUser">
+      <a routerLink="/about-us">About us</a>
+    </li>
+    <li>
+      <a routerLink="/terms-of-service">Terms of service</a>
+    </li>
+    <li>
+      <a routerLink="/privacy-policy">Privacy policy</a>
+    </li>
+    <li *ngIf="!authenticatedUser">
+      <a routerLink="/contact">Contact</a>
+    </li>
+    <li *ngIf="authenticatedUser">
+      <a routerLink="/members/support">Support</a>
+    </li>
+  </ul>
+</div>
+<div class="meta">
+  <a class="logo-muted" routerLink="/"></a>
+  <small>&copy; {{ appName }} 2021</small>
+</div>
+

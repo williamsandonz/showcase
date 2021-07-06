@@ -1,0 +1,29 @@
+@import './../../../../styles/includes';
+
+
+:host {
+  position: relative;
+  display: none;
+  width: 300px;
+  @include media-breakpoint-up(lg) {
+    display: block;
+  }
+}
+div {
+  position: absolute;
+  padding: $gutter;
+  border: 1px solid $gray;
+  width: calc(100% - #{$gutter * 2});
+  background: white;
+  border-radius: $border-radius;
+}
+ul {
+  padding-left: 0;
+}
+li {
+  margin-top: 10px;
+  list-style-type: none;
+  &:first-child {
+    margin-top: 0
+  };
+}

@@ -1,0 +1,10 @@
+<div>
+  <h6>ON THIS PAGE</h6>
+  <ul *ngIf="activePlatform">
+    <li *ngFor="let section of activePlatform.sections">
+    -  <a routerLink="./{{activePlatform.path}}" [fragment]="section.fragment">
+        {{ section.title }}
+      </a>
+    </li>
+  </ul>
+</div>

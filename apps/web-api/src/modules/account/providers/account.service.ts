@@ -1,79 +1,57 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable } from '@nestjs/common';
 import { Account } from './../entities';
-import { Repository } from 'typeorm';
-import { SignUpRequestDto } from '../dto';
 import { StripeService } from '../../stripe/providers';
-import { IAccountAuthenticatedRequestDto, IAccountSummary } from '@monorepo/web-api-client';
-import { OrganisationService } from '../../organisation/providers';
-import { OrganisationMembershipService } from '../../organisation/providers/organisation-membership.service';
-import { ProjectMembershipService } from '../../project/providers/project-membership.service';
+import { DatabaseService } from '../../common/providers';
 
 @Injectable()
 export class AccountService {
   constructor(
-    @InjectRepository(Account)
-    private repo: Repository<Account>,
-    private organisationService: OrganisationService,
-    private organisationMembershipService: OrganisationMembershipService,
-    private projectMembershipService: ProjectMembershipService,
+    private databaseService: DatabaseService,
     private stripeService: StripeService
   ) {}
 
-  async delete(id: string): Promise<any> {
-    return this.repo.delete(id);
-  }
+  async create(
+    email: string,
+    id: string,
+    name: string,
+    timezone: string,
+  ): Promise<Account> {
+    const repo = this.databaseService.getRepository(Account);
 
-  async findById(id: string) {
-    return this.repo.findOne(id);
-  }
-
-  async getHasSignedUp(id: string): Promise<boolean> {
-    const account = await this.repo.findOne(id);
-    return !!account;
-  }
-
-  async onAuthenticated(id: string, dto: IAccountAuthenticatedRequestDto): Promise<IAccountSummary> {
-    const account = await this.repo.findOne(id);
-    if (!account) {
-      throw new NotFoundException();
-    }
-    if (dto.cookieUsageEnabled && !account.cookieUsageEnabled) {
-      // User accepted cookie disclaimer prior to being authenticated, so update now
-      account.cookieUsageEnabled = true;
-      await this.repo.save(account);
-    }
-    return {
-      cookieUsageEnabled: account.cookieUsageEnabled,
-      name: account.name,
-      organisationMemberships: (await this.organisationMembershipService.getMemberships(id)).map(membership => membership.transformForResponse()),
-      projectMemberships: (await this.projectMembershipService.getMemberships(id)).map(membership => membership.transformForResponse())
-    };
-  }
-
-  async signUp(dto: SignUpRequestDto): Promise<Account> {
-    if (await this.repo.findOne(dto.id)) {
-      throw new BadRequestException('User already exists');
-    }
     // Deliberately creating customer before saving account so that worst case
     // we have an unassociated customer rather than an account without a customer.
     const stripeCustomer = await this.stripeService.createCustomer();
     const timestamp = new Date();
-    const account = await this.repo.save({
-      id: dto.id,
+
+    return repo.save({
+      id: id,
       dateJoined: timestamp,
+      email: email,
       lastLoggedIn: timestamp,
-      name: dto.name,
+      name: name,
       stripeCustomerId: stripeCustomer.id,
-    } as Partial<Account>);
-    await this.organisationService.createOrganisationFromSignup(account, dto.name);
-    return account;
+      timezone: timezone,
+    } as Account);
   }
 
-  async toggleCookieUsage(id: string, enable: boolean): Promise<void> {
-    const account = await this.findById(id);
-    account.cookieUsageEnabled = enable;
-    await this.repo.save(account);
-    return null;
+  async delete(id: string): Promise<any> {
+    return this.databaseService.getRepository(Account).delete(id);
   }
+
+  async findById(id: string) {
+    return this.databaseService.getRepository(Account).findOne(id);
+  }
+
+  async findByEmail(email: string) {
+    return this.databaseService.getRepository(Account).findOne({
+      where: {
+        email
+      }
+    });
+  }
+
+  async save(account: Account) {
+    return this.databaseService.getRepository(Account).save(account);
+  }
+
 }

@@ -1,0 +1,91 @@
+<a class="logo" routerLink="/"></a>
+<ul class="links">
+  <!--
+    NB: Nasty repitition present on links due to limitations in Angular & MatMenu.
+      1. 'Arrow' won't display when inside mat-menu if ng-template used
+      2. matMenuTriggerFor can't be applied conditionally
+      3. Can't prevent matMenuTrigger with (click) handler
+    Only viable solution is to use a subcomponent recursively:
+      -https://stackblitz.com/edit/angular-material-nested-submenu?file=app%2Fnested-menu-example.html
+  -->
+  <li *ngFor="let link of pageLinks">
+    <a
+      *ngIf="link.text !== 'Products'"
+      [routerLink]="link.path"
+      routerLinkActive="active"
+      mat-menu-item="displayAsMenu">
+      {{ link.text }}
+    </a>
+    <a
+      *ngIf="link.text === 'Products'"
+      mat-menu-item="displayAsMenu"
+      #menuTrigger="matMenuTrigger"
+      [matMenuTriggerFor]="productsMenu.menu">
+      {{ link.text }}
+      <mat-icon>expand_more</mat-icon>
+    </a>
+  </li>
+</ul>
+<button mat-button [matMenuTriggerFor]="menu" class="links-dropdown-button">
+  <mat-icon>menu</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+  <ul class="links">
+    <li *ngFor="let link of pageLinks">
+      <a
+        *ngIf="link.text !== 'Products'"
+        [routerLink]="link.path"
+        routerLinkActive="active"
+        mat-menu-item="displayAsMenu">
+        {{ link.text }}
+      </a>
+      <a
+        *ngIf="link.text === 'Products'"
+        mat-menu-item="displayAsMenu"
+        #menuTrigger="matMenuTrigger"
+        [matMenuTriggerFor]="productsMenu.menu">
+        {{ link.text }}
+      </a>
+    </li>
+  </ul>
+</mat-menu>
+<button *ngIf="settingsMenuLoaded" mat-button [matMenuTriggerFor]="profileMenu" class="settings-dropdown-button">
+  <div>
+    <p>
+      <strong>{{ accountName }} </strong>
+      <small>{{ selectedOrganisationName }}<span>, 7 projects</span></small>
+    </p>
+    <mat-icon>expand_more</mat-icon>
+  </div>
+</button>
+<mat-menu #profileMenu="matMenu">
+  <ul>
+    <li>
+      <a routerLink="/account/settings/general" mat-menu-item>Account settings</a>
+    </li>
+    <li>
+      <a routerLink="{{currentOrganisationBasePath}}settings/general" mat-menu-item>Organisation settings</a>
+    </li>
+    <li *ngIf="switchableOrganisations.length > 0">
+      <a mat-menu-item [matMenuTriggerFor]="organisationMenu">Switch organisation</a>
+    </li>
+    <li *ngIf="switchableOrganisations.length === 0">
+      <a mat-menu-item routerLink="/members/create-organisation">Create a new organisation</a>
+    </li>
+    <li>
+      <a (click)="logout()" mat-menu-item>Logout</a>
+    </li>
+  </ul>
+</mat-menu>
+<mat-menu #organisationMenu="matMenu">
+  <button
+    *ngFor="let organisation of switchableOrganisations"
+    mat-menu-item
+    (click)="onSwitchOrganisation(organisation)">
+    {{ organisation.name }}
+  </button>
+  <button mat-menu-item routerLink="/members/create-organisation">
+    Create a new organisation
+  </button>
+</mat-menu>
+<app-product-menu #productsMenu></app-product-menu>
